@@ -10,8 +10,8 @@ library(RCurl) # used for loading data from github
 standardize <- function(x, mu = mean(x), sig = sd(x)) (x-mu)/sig
 
 # read the data
-url_1 <- getURL("https://raw.github.com/leonthoma/Repro/Hallmann_s1_data.csv")
-url_2 <- getURL("https://raw.github.com/leonthoma/Repro/Hallmann_s2_data.csv")
+url_1 <- getURL("https://raw.githubusercontent.com/leonthoma/Repro/master/Hallmann_s1_data.csv")
+url_2 <- getURL("https://raw.githubusercontent.com/leonthoma/Repro/master/Hallmann_s2_data.csv")
 
 data <- read.csv(text = url_1, header = TRUE, sep = ",")
 model.frame <- read.csv(text = url_2, header = TRUE, sep = ",")
