@@ -21,12 +21,17 @@ model.frame <- read.csv(text = url_2, header = TRUE, sep = ",")
 
 # ---- Null Model ----
 
+## Indices contain the corresponding rows in model.frame of the  starting (1)
+## and end (2) position of the potID groups
+## plot is used to get plot info for the location-specific random effect (eps)
+## loctype is used for the habitat cluster covariate
+
 jagsdataNull <- list(
   m = data$biomass,
-  index1 = with(model.frame, tapply(1:nrow(model.frame), potID, min))[data$potID],
-  index2 = with(model.frame, tapply(1:nrow(model.frame),potID,max))[data$potID],
+  index1 = with(model.frame, tapply(1:nrow(model.frame), potID, min))[data$potID], 
+  index2 = with(model.frame, tapply(1:nrow(model.frame), potID, max))[data$potID],
   plot = as.numeric(model.frame$plot),
-  loctype = as.numeric(data$location.type[match(model.frame$potID,data$potID)]),
+  loctype = as.numeric(data$location.type[match(model.frame$potID, data$potID)]),
   daynr = as.numeric((model.frame$daynr - mean(data$mean.daynr)) / sd(data$mean.daynr)),
   daynr2 = as.numeric((model.frame$daynr - mean(data$mean.daynr)) / sd(data$mean.daynr))^2,
   ndaily = nrow(model.frame),
@@ -37,29 +42,32 @@ jagsdataNull <- list(
 sink("NullModel.jag")
 cat("
 model{
+## likelihood function for the latent expected daily biomass
 for (i in 1:n){
 m[i] ~ dnorm(sum(y[index1[i]:index2[i]]), tau[i])
 tau[i] <- 1 / Var[i]
 Var[i] <- sum(vr[index1[i]:index2[i]])
 }
+
+## likelihood function for muHat (y), it's dependent function (z) and variance (vr)
 for (i in 1:ndaily){
-y[i] <- exp(z[i]) # 
-z[i] <- int +
-c[1]*daynr[i] + c[2]*daynr2[i]+
-b[loctype[i]] +
-eps[plot[i]]
-vr[i]<- exp( 2* z[i]+ lvar ) * (exp(lvar)-1 ) # Variance
+y[i]  <- exp(z[i]) ## z is actually called y in the paper
+z[i]  <- int + c[1] * daynr[i] + c[2] * daynr2[i] + b[loctype[i]] + eps[plot[i]]
+## this is called y in the paper
+vr[i] <- exp(2 * z[i] + lvar) * (exp(lvar) - 1) ## variance
 }
-int ~ dnorm(0,.01)
-b[1] <- 0
-for (i in 2:3) { b[i] ~ dnorm(0, .01)}
-for (i in 1:2) { c[i] ~ dnorm(0, .01)}
+
+## priors
+int ~ dnorm(0,.01) ## global intercept (see eq. 4 in paper)
+b[1] <- 0  
+for (i in 2:3) {b[i] ~ dnorm(0, .01)}
+for (i in 1:2) {c[i] ~ dnorm(0, .01)}
 sdhat ~ dunif(0, 5)
-lvar <- pow(sdhat, 2) # variance of daily log-biomass
+lvar <- pow(sdhat, 2) ## variance of daily log-biomass
 for(i in 1:nrandom) {
-eps[i] ~ dnorm(0, tau.re)
+eps[i] ~ dnorm(0, tau.re) ## location-specific random effect (see eq. 4 in paper)
 }
-tau.re <- pow(sd.re, -2)
+tau.re <- pow(sd.re, -2) ## convert sd to percision parameter of normal dist
 sd.re ~ dunif(0, 1)
 }
 ")
