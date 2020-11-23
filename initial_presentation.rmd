@@ -1,0 +1,50 @@
+---
+title: "Our Approach on Hallmann 2017"
+author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
+date: "27.11.2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Main Results of the Paper
+* ~ 75 % decline in flying insect biomass over 27 years
+* On protected sites of nature conservation
+* Independent on weather, land-use, habitat characteristics
+* ~ 80 % of the effects explaining declines are unknown
+* Highest losses in times of highest biomass
+
+```{r, echo=FALSE, out.width="33%", fig.cap="Temporal distribution of insect biomass at selected locations (Hallmann 2017)"}
+knitr::include_graphics("decline_on_ins_biom.PNG")
+```
+
+
+## Impact of the paper / relevance
+* Included in 9 Wikipedia articles
+* ~ 1915 tweets about the paper
+* Broad media coverage
+* something reliable on relevance for politics?
+
+## Description of the dataset
+* Data collected between 1989 and 2016 (96 unique location-year combinations)
+* Mostly one sample per location
+* samples spanning from spring to autmumn, diverse sampling durations
+* Predictor variables collected from variouns sources
+
+## Describing the approach of Hallmann et al.
+
+## What would is critical about the paper
+
+## How are we planning to reanalyse it
+
+## Further description of Our plan to reanalyse it
+
+## what do we expect from our reanalysis
+
+## How could our reanalysis be restricted
+
+## References
+
+
