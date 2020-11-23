@@ -35,9 +35,10 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 
 ## Describing the approach of Hallmann et al.
 
-## What would is critical about the paper
+## What is critical about the paper / improvement
 
 ## How are we planning to reanalyse it
+
 
 ## Further description of Our plan to reanalyse it
 
