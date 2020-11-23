@@ -1,10 +1,11 @@
 Why do we want to analyse the paper:
+
     - Rule out or estimate the value of the decline
       highly anticipated, a lot of attention
 
     - Motivation for the re-analysis, why we are doing that? 
       what do we expect?
-        - check for regression of the mean
+        check for regression of the mean
         
 Regression for basic model
 
