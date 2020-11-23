@@ -81,5 +81,18 @@ jagsmod0 <- jags(jagsdataNull, inits = NULL, parametersNull,
 jagsmod0
 
 
+# ---- Re-Analysis ----
+library(dplyr)
+
+# Filter Biomass data (only first Dataset of every plot)
+py <- select(data, c(plot, year)) %>%
+  group_by(plot) %>%
+  distinct(plot, year) %>%
+  arrange(plot, year) # overview plot by year
+
+new_plots <- group_by(py, plot) %>%
+ slice(1) # get first sampling year of each plot
+
+new_data <- semi_join(data, new_plots, by = c("plot", "year"))
 
 
