@@ -1,6 +1,6 @@
 ---
 title: "Our Approach on Hallmann 2017"
-author: "Valentina Gacitua, Leon XX, Dominik Arend"
+author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
 date: "20 11 2020"
 output: ioslides_presentation
 ---
@@ -18,7 +18,7 @@ Test, I now change something
 
 ## Motivation to analyse this Paper
 
-
+hh
 ## Description of The Dataset
 
 ## Describing the approach of Hallmann et al.
