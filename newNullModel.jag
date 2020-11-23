@@ -1,0 +1,28 @@
+model{
+## Likelihood function for the latent expected daily biomass
+for (i in 1:n){
+m_bio[i] ~ dnorm(sum(z[tau1[i]:tau2[i]]), sig_sq[i]) # measured daily biomass
+sig_sq[i] <- 1 / Var[i] # Precision
+Var[i] <- sum(vr[tau1[i]:tau2[i]]) # Variance of measured biomass
+}
+
+## Likelihood function for muHat, it's dependent function and variance
+for (i in 1:ndaily){
+z[i]  <- exp(y[i]) # Latent expected daily biomass
+y[i]  <- g_intcp + c[1] * daynr[i] + c[2] * daynr2[i] + b[loctype[i]] + eps[plot[i]]
+vr[i] <- exp(2 * y[i] + lvar) * (exp(lvar) - 1) # Variance (see paper eq. 6)
+}
+
+## Priors
+g_intcp ~ dnorm(0,.01) # global intercept (see eq. 4 in paper [c])
+b[1] <- 0 
+for (i in 2:3) {b[i] ~ dnorm(0, .01)} # Habitat cluster 2 & 3 covariates
+for (i in 1:2) {c[i] ~ dnorm(0, .01)} # coef for daynr & naynr^2 covariates
+sdhat ~ dunif(0, 5) # Estimated sd
+lvar <- pow(sdhat, 2) # Residual variance of daily log-biomass
+for(i in 1:nrandom) {
+eps[i] ~ dnorm(0, sig_sq.re) # Location-specific random effect (see eq. 4 in paper [u_s])
+}
+sig_sq.re <- pow(sd.re, -2) # Residual [sigma^2_j]; pow():Convert sd to percision parameter
+sd.re ~ dunif(0, 1) # Residual sd
+}
