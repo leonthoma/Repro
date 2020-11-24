@@ -152,19 +152,43 @@ newjagsmod0
 # ---- Visualization ----
 library(ggplot2)
 
+# Costum palette to match colors from paper
 my_pal <- c("#f46d43", "#fdae61", "#fee090", "#ffffbf", "#e0f3f8", "#abd9e9",
             "#74add1", "#4575b4")
 
-# Attempting to recreate Fig. 2b
+# Recreate Fig. 2a
+tot_bm_data <- mutate(new_data, bm_p_day = biomass / (to.daynr - from.daynr)) %>%
+  select(year, bm_p_day)
+
+ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
+                        y = bm_p_day,
+                        fill = year)) +
+  geom_boxplot() +
+  #geom_jitter(width = .1, alpha = .2) + # optional: datapoints
+  scale_fill_gradient2(low = "#4575b4",
+                        mid = "#fee090",
+                        high = "#f46d43",
+                        na.value = "grey50",
+                        midpoint = 2005,
+                        guide = "none") +
+  scale_x_discrete(breaks = seq(1990, 2015, by = 5), drop = F) +
+  theme_classic() +
+  labs(y = "Biomass [g/d]", x = "Year")
+
+# Recreate Fig. 2b
 # Season from 1st of April to 30th of October; i.e. Day 91 to 303
 s_bm_data <- filter(data, from.daynr >= 91 & to.daynr <= 303) %>%
   mutate(bm_p_day = biomass / (to.daynr - from.daynr)) %>% 
-  select(plot, year, bm_p_day, mean.daynr)
+  select(year, bm_p_day, mean.daynr)
 
 ggplot(s_bm_data) +
-  geom_point(aes(x = mean.daynr, y = bm_p_day, color = year), ) +
-  scale_color_gradient2(low = "#4575b4", mid = "#fee090", high = "#f46d43",
-                        na.value = "grey50", midpoint = 2005, guide = "none") +
+  geom_point(aes(x = mean.daynr, y = bm_p_day, color = year)) +
+  scale_color_gradient2(low = "#4575b4",
+                        mid = "#fee090",
+                        high = "#f46d43",
+                        na.value = "grey50",
+                        midpoint = 2005,
+                        guide = "none") +
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Day of year")
   
