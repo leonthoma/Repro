@@ -1,0 +1,31 @@
+model{
+## Likelihood function for the latent expected daily biomass
+for (i in 1:n) {
+m_bio[i] ~ dnorm(sum(y[tau1[i]:tau2[i]]), sig_sq[i])
+sig_sq[i] <- 1/Var[i]
+Var[i] <- sum(vr[tau1[i]:tau2[i]])
+}
+
+## Likelihood function for muHat, it's dependent function and variance
+for (i in 1:ndaily) {
+z[i] <- exp(y[i])
+y[i] <- g_intcp + log.lambda * year[i] + c[1] * daynr[i] + c[2] * daynr2[i] +
+  c[3] * daynr[i] * year[i] + c[4] * daynr2[i] * year[i] + b[loctype[i]] +
+  eps[plot[i]]
+vr[i] <- exp(2 * y[i] + lvar) * (exp(lvar) - 1)
+}
+
+## Priors
+g_intcp ~ dnorm(0, .01)
+log.lambda ~ dnorm(0, .01)
+b[1] <- 0
+for( i in 2:3) {b[i] ~ dnorm(0, .01)}
+for( i in 1:4) {c[i] ~ dnorm(0, .01)}
+sdhat ~ dunif(0, 5)
+lvar <- pow(sdhat, 2)
+for (i in 1:nrandom) {
+eps[i] ~ dnorm(0, tau.re)
+}
+tau.re<- pow(sd.re, -2)
+sd.re ~ dunif(0, 1)
+}
