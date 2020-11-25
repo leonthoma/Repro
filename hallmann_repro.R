@@ -2,6 +2,10 @@
 
 library(R2jags)
 library(RCurl) # used for loading data from github
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(purrr)
 
 # ---- Load & Standardize ----
 # Read the data
@@ -78,7 +82,7 @@ jagsmod0
 
 # ---- Re-Analysis ----
   # ---- Data wrangling ----
-library(dplyr)
+
 
 # Filter Biomass data (only first Dataset of every plot)
 py <- select(data, c(plot, year)) %>%
@@ -89,6 +93,7 @@ py <- select(data, c(plot, year)) %>%
 new_plots <- group_by(py, plot) %>%
  slice(1) # get first sampling year of each plot
 
+# Create new dfs
 new_data <- semi_join(data, new_plots, by = c("plot", "year"))
 new_model.frame <- semi_join(model.frame, new_plots, by = c("plot", "year"))
 
@@ -215,13 +220,11 @@ jagsmodBasic <- jags(newjagsdataBasic, inits = NULL, parameters = parametersBasi
 jagsmodBasic
 
   # ---- Visualization ----
-library(ggplot2)
-
-# Costum palette to match colors from paper
+# Custom palette to match colors from paper
 my_pal <- c("#f46d43", "#fdae61", "#fee090", "#ffffbf", "#e0f3f8", "#abd9e9",
             "#74add1", "#4575b4")
 
-# Recreate Fig. 2a
+## Recreate Fig. 2a
 tot_bm_data <- mutate(new_data, bm_p_day = biomass / (to.daynr - from.daynr)) %>%
   select(year, bm_p_day)
 
@@ -240,7 +243,7 @@ ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Year")
 
-  # Recreate Fig. 2b
+## Recreate Fig. 2b
 # Season from 1st of April to 30th of October; i.e. Day 91 to 303
 s_bm_data <- filter(data, from.daynr >= 91 & to.daynr <= 303) %>%
   mutate(bm_p_day = biomass / (to.daynr - from.daynr)) %>% 
@@ -257,3 +260,49 @@ ggplot(s_bm_data) +
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Day of year")
   
+## Scatterplot RTM effect
+# Following Barnett et. al 2004; Fig. 3
+# Extracting resampled plots
+re_plots <- group_by(py, plot) %>% tally() %>% filter(n > 1)
+
+# Create new df
+scat_data <- semi_join(data, re_plots, by = "plot") %>%
+  select(c(plot, year, biomass))
+
+## Issues:
+## not same no of measurements per year
+group_by(scat_data, plot, year) %>% tally()
+
+
+## NOT RUN
+# # Calculate change (i.e. follow-up - baseline value)
+# plot_vec <- levels(scat_data$plot)
+# 
+# chg_fun <- function(plt) {
+#   y_val <- unique(unlist(filter(scat_data, plot == plt) %>% select(year))) # get year
+#   y_1 <- min(y_val) # get base year
+#   
+#   if (length(unique(y_val)) > 2) {
+#     y_2 <- sort(y_val)[2] # get follow-up year
+#   } else {
+#     y_2 <- max(y_val)
+#   } # use nth only when more than 2 years were sampled
+#   
+#   bm_1 <- unlist(filter(scat_data, plot == plt) %>%
+#     filter(year == y_1) %>% select(biomass)) # get biomass vals of base year
+#   bm_2 <- unlist(filter(scat_data, plot == plt) %>%
+#     filter(year == y_2) %>% select(biomass)) # get biomass vals of follow-up year
+#   
+#   n_1 <- length(bm_1)
+#   n_2 <- length(bm_2)
+#   ifelse(n_1 > n_2, yes = bm_1 <- bm_1[1:n_2], no = bm_2 <- bm_2[1:n_1]) # match lengths of bm vecs
+#   
+#   res <- as.vector(bm_2 - bm_1)
+#   print(res)
+# }
+# 
+# for (i in seq_along(plot_vec)) {
+#   print(plot_vec[i])
+#   chg_fun(plot_vec[i])
+# }
+
