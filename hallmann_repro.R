@@ -14,7 +14,7 @@ model.frame <- read.csv(text = url_2, header = TRUE, sep = ",")
 # summary(data)
 # summary(model.frame)
 
-# ---- Null Model ----
+  # ---- Original null Model ----
 
 ## Indices contain the corresponding rows in model.frame of the  starting (1)
 ## and end (2) position of the potID groups; tau_1/2 in the paper
@@ -77,6 +77,7 @@ jagsmod0 <- jags(jagsdataNull, inits = NULL, parametersNull,
 jagsmod0
 
 # ---- Re-Analysis ----
+  # ---- Data wrangling ----
 library(dplyr)
 
 # Filter Biomass data (only first Dataset of every plot)
@@ -91,6 +92,7 @@ new_plots <- group_by(py, plot) %>%
 new_data <- semi_join(data, new_plots, by = c("plot", "year"))
 new_model.frame <- semi_join(model.frame, new_plots, by = c("plot", "year"))
 
+  # ---- Null model ----
 # New Null model (with meaningful/unambiguous variable names)
 newjagsdataNull <- list(
   m_bio = new_data$biomass,
@@ -148,8 +150,68 @@ newjagsmod0 <- jags(newjagsdataNull, inits = NULL, parametersNull,
                  "newNullModel.jag", n.chains = 3, n.iter = 120, n.burnin = 20,
                  n.thin = 10)
 newjagsmod0
+  # ---- Basic Model ----
+jagsdataBasic <- list(
+  m_bio = data$biomass,
+  tau1 = with(model.frame, tapply(1:nrow(model.frame), potID, min)),
+  tau2 = with(model.frame, tapply(1:nrow(model.frame), potID, max)),
+  plot = as.numeric(model.frame$plot),
+  loctype = as.numeric(data$location.type[match(model.frame$potID,data$potID)]),
+  daynr = as.numeric((model.frame$daynr-mean(data$mean.daynr)) / sd(data$mean.daynr)),
+  daynr2 = as.numeric((model.frame$daynr-mean(data$mean.daynr)) / sd(data$mean.daynr))^2,
+  year = model.frame$year - 1988,
+  ndaily = nrow(model.frame),
+  n = nrow(data),
+  nrandom = max(as.numeric(model.frame$plot))
+)
 
-# ---- Visualization ----
+# Jags model
+## NEEDS TO RUN ONCE TO CREATE .JAGS FILE
+## SET WD TO APROPRIATE DIRECTORY
+{
+# sink("BasicModel.jag")
+# cat("model{
+# ## Likelihood function for the latent expected daily biomass
+# for (i in 1:n) {
+# m_bio[i] ~ dnorm(sum(y[tau1[i]:tau2[i]]), sig_sq[i])
+# sig_sq[i] <- 1/Var[i]
+# Var[i] <- sum(vr[tau1[i]:tau2[i]])
+# }
+# 
+# ## Likelihood function for muHat, it's dependent function and variance
+# for (i in 1:ndaily) {
+# z[i] <- exp(y[i])
+# y[i] <- g_intcp + log.lambda * year[i] + c[1] * daynr[i] + c[2] * daynr2[i] +
+#   c[3] * daynr[i] * year[i] + c[4] * daynr2[i] * year[i] + b[loctype[i]] +
+#   eps[plot[i]]
+# vr[i] <- exp(2 * y[i] + lvar) * (exp(lvar) - 1)
+# }
+# 
+# ## Priors
+# g_intcp ~ dnorm(0, .01)
+# log.lambda ~ dnorm(0, .01)
+# b[1] <- 0
+# for( i in 2:3) {b[i] ~ dnorm(0, .01)}
+# for( i in 1:4) {c[i] ~ dnorm(0, .01)}
+# sdhat ~ dunif(0, 5)
+# lvar <- pow(sdhat, 2)
+# for (i in 1:nrandom) {
+# eps[i] ~ dnorm(0, tau.re)
+# }
+# tau.re<- pow(sd.re, -2)
+# sd.re ~ dunif(0, 1)
+# }
+# ")
+# sink(NULL)
+}
+
+# Run the model
+parametersBasic <- c("int", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
+jagsmodBasic <- jags(jagsdataBasic, inits = NULL, parameters = parametersBasic,
+                    "BasicModel.jag", n.chains = 3, n.iter = 240,
+                    n.burnin = 40, n.thin = 10)
+
+  # ---- Visualization ----
 library(ggplot2)
 
 # Costum palette to match colors from paper
@@ -163,7 +225,7 @@ tot_bm_data <- mutate(new_data, bm_p_day = biomass / (to.daynr - from.daynr)) %>
 ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
                         y = bm_p_day,
                         fill = year)) +
-  geom_boxplot() +
+  geom_boxplot(outlier.alpha = .4, outlier.shape = 1) +
   #geom_jitter(width = .1, alpha = .2) + # optional: datapoints
   scale_fill_gradient2(low = "#4575b4",
                         mid = "#fee090",
