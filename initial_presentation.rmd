@@ -33,12 +33,27 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 * samples spanning from spring to autmumn, diverse sampling durations
 * Predictor variables collected from variouns sources
 
-## Describing the approach of Hallmann et al.
+## The insect biomass model of Hallmann et al.
+* Different exposure times of insect traps / catchinng intervals
++ induces heterodescadicity
+* Biomass can take positive values
+* Biomass is modeled as sum of expected latent biomass
++ mass is assumed to be normaly distributed over the sum of latent expected daily mass
++ Latent daily biomass is represented by log-normal distribution
+
+## Biomass modelling part 2
++ Something about the bayesian statistics...
++ Jags modeling
+* they use very broad priors, so probably no biase towards this
 
 ## What is critical about the paper / improvement
+* regression towards the mean?
+ + Did the people sampling data favor good positions?
+* Unknown covariate has to be something else, maybe plot selection
 
 ## How are we planning to reanalyse it
-
+* not using all years of plots
++ to treat for regression towards the mean
 
 ## Further description of Our plan to reanalyse it
 
@@ -47,5 +62,4 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 ## How could our reanalysis be restricted
 
 ## References
-
 
