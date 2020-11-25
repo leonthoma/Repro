@@ -145,24 +145,25 @@ newjagsdataNull <- list(
 }
 
 # Run the model
-parametersNull <- c("int", "b", "c", "eps", "sdhat", "sd.re")
+parametersNull <- c("g_intcp", "b", "c", "eps", "sdhat", "sd.re")
 newjagsmod0 <- jags(newjagsdataNull, inits = NULL, parametersNull,
                  "newNullModel.jag", n.chains = 3, n.iter = 120, n.burnin = 20,
                  n.thin = 10)
 newjagsmod0
+
   # ---- Basic Model ----
-jagsdataBasic <- list(
-  m_bio = data$biomass,
-  tau1 = with(model.frame, tapply(1:nrow(model.frame), potID, min)),
-  tau2 = with(model.frame, tapply(1:nrow(model.frame), potID, max)),
-  plot = as.numeric(model.frame$plot),
-  loctype = as.numeric(data$location.type[match(model.frame$potID,data$potID)]),
-  daynr = as.numeric((model.frame$daynr-mean(data$mean.daynr)) / sd(data$mean.daynr)),
-  daynr2 = as.numeric((model.frame$daynr-mean(data$mean.daynr)) / sd(data$mean.daynr))^2,
-  year = model.frame$year - 1988,
-  ndaily = nrow(model.frame),
-  n = nrow(data),
-  nrandom = max(as.numeric(model.frame$plot))
+newjagsdataBasic <- list(
+  m_bio = new_data$biomass,
+  tau1 = with(new_model.frame, tapply(1:nrow(new_model.frame), potID, min)),
+  tau2 = with(new_model.frame, tapply(1:nrow(new_model.frame), potID, max)),
+  plot = as.numeric(new_model.frame$plot),
+  loctype = as.numeric(new_data$location.type[match(new_model.frame$potID,new_data$potID)]),
+  daynr = as.numeric((new_model.frame$daynr-mean(new_data$mean.daynr)) / sd(new_data$mean.daynr)),
+  daynr2 = as.numeric((new_model.frame$daynr-mean(new_data$mean.daynr)) / sd(new_data$mean.daynr))^2,
+  year = new_model.frame$year - 1988,
+  ndaily = nrow(new_model.frame),
+  n = nrow(new_data),
+  nrandom = max(as.numeric(new_model.frame$plot))
 )
 
 # Jags model
@@ -206,10 +207,12 @@ jagsdataBasic <- list(
 }
 
 # Run the model
-parametersBasic <- c("int", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
-jagsmodBasic <- jags(jagsdataBasic, inits = NULL, parameters = parametersBasic,
+parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
+jagsmodBasic <- jags(newjagsdataBasic, inits = NULL, parameters = parametersBasic,
                     "BasicModel.jag", n.chains = 3, n.iter = 240,
                     n.burnin = 40, n.thin = 10)
+
+jagsmodBasic
 
   # ---- Visualization ----
 library(ggplot2)
@@ -237,7 +240,7 @@ ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Year")
 
-# Recreate Fig. 2b
+  # Recreate Fig. 2b
 # Season from 1st of April to 30th of October; i.e. Day 91 to 303
 s_bm_data <- filter(data, from.daynr >= 91 & to.daynr <= 303) %>%
   mutate(bm_p_day = biomass / (to.daynr - from.daynr)) %>% 
