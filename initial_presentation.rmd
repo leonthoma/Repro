@@ -2,7 +2,9 @@
 title: "Our Approach on Hallmann 2017"
 author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
 date: "27.11.2020"
-output: ioslides_presentation
+output:
+  ioslides_presentation: default
+bibliography: Literature_Presentation.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -37,6 +39,7 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 ```{r, echo=FALSE, out.width="50%"}
 knitr::include_graphics("Malaise_trap.JPG")
 ```
+[@hallmann2017more]
 
 ## Description of the dataset
 * Data collected between 1989 and 2016 (96 unique location-year combinations)
