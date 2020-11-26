@@ -42,7 +42,7 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 * Mostly one sample per location
 * samples spanning from spring to autmumn, diverse sampling duration
 * Predictor variables collected from various sources
- + Aerial photographs, 
+ + Aerial photographs, Plant inventories, 169 climate stations
 
 ## The insect biomass model of Hallmann et al.
 * Different exposure times of insect traps / catchinng intervals
