@@ -272,7 +272,7 @@ scat_data <- semi_join(data, re_plots, by = "plot") %>%
 ## Issues:
 ## not same no of measurements per year
 group_by(scat_data, plot, year) %>% tally()
-
+## Biomass vals have to be normally distributed
 
 ## NOT RUN
 # # Calculate change (i.e. follow-up - baseline value)
@@ -282,11 +282,11 @@ group_by(scat_data, plot, year) %>% tally()
 #   y_val <- unique(unlist(filter(scat_data, plot == plt) %>% select(year))) # get year
 #   y_1 <- min(y_val) # get base year
 #   
-#   if (length(unique(y_val)) > 2) {
-#     y_2 <- sort(y_val)[2] # get follow-up year
+#   if (length(y_val) > 2) {
+#     y_2 <- sort(y_val)[2] 
 #   } else {
 #     y_2 <- max(y_val)
-#   } # use nth only when more than 2 years were sampled
+#   } # get follow-up year
 #   
 #   bm_1 <- unlist(filter(scat_data, plot == plt) %>%
 #     filter(year == y_1) %>% select(biomass)) # get biomass vals of base year
