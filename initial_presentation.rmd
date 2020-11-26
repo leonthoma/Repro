@@ -28,14 +28,15 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 * something reliable on relevance for politics?
 
 ## Data gathering
-```{r, echo=FALSE, out.width="33%"}
-knitr::include_graphics("decline_on_ins_biom.PNG")
-```
 * Entomological Society Krefeld
 * Standardized protocol
-* Malaise traps (*~ every 11 days emptied)
+* Malaise traps (~ every 11 days emptied)
 * catchments between 1989 and 2016
 * All locations within protected areas (Nature reserves, Natura 2000, Protected landscape areas)
+
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("Malaise_trap.JPG")
+```
 
 ## Description of the dataset
 * Data collected between 1989 and 2016 (96 unique location-year combinations)
@@ -68,25 +69,46 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 
 ## Regression towards the mean
 
-```{r, echo=FALSE, out.width="60%", fig.cap="Example of true mean and variation, and of regression to the mean (Barnett et al. 2005)"}
-knitr::include_graphics("True_mean_and_variation.jpg")
+```{r, echo=FALSE}
+knitr::include_graphics("RTM_1.JPG")
+```
+
+## Regression towards the mean
+
+```{r, echo=FALSE}
+knitr::include_graphics("RTM_2.JPG")
+```
+
+
+## Regression towards the mean
+
+```{r, echo=FALSE}
+knitr::include_graphics("RTM_3.JPG")
 ```
 
 ## What is critical about the paper / improvement
-* regression towards the mean?
- + Did the people sampling data favor good positions?
-* Unknown covariate has to be something else, maybe plot selection
+* Unknown procedure of plot selection (stage of data collection)
+* No "control" plots
+* Is there a bias towards plots richer in biomass at the beginning
+* Unbalanced study design, some plots are observed twice, some not
+* Huge uncertainty about drivers of the decline
 
 ## How are we planning to reanalyse it
 * not using all years of plots
 + to treat for regression towards the mean
-* code chunks
+
 
 ## Further description of Our plan to reanalyse it
 
 ## what do we expect from our reanalysis
+* a qualified guess, if regression to the mean influenced the results of this paper
+* Assessing the quality of the stated decline on insect biomass
+* Development of our skills in bayesian statistics
 
 ## How could our reanalysis be restricted
+* We will not find further predictors nor explain effects of temporal change
+* 
 
 ## References
+
 
