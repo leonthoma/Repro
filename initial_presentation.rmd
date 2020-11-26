@@ -57,6 +57,15 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 + Jags modeling
 * they use very broad priors, so probably no biase towards this
 
+## Bayesian Modeling
+| Frequentist | Bayesian |
+| ---- | ---- |
+| Probability is "long-run frequency" | Probability is "degree of certainty" |
+| $P(X \mid \theta)$ is a sampling distribution | $P(X \mid \theta)$ is a likelihood |
+| "How likely is the data given our parameters" | "How likely is the parameter given our data" |
+| No prior | Prior |
+| Confidence Intervals | Credibility Intervals |
+
 ## Regression towards the mean
 
 ```{r, echo=FALSE, out.width="60%", fig.cap="Example of true mean and variation, and of regression to the mean (Barnett et al. 2005)"}
