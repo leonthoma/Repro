@@ -28,6 +28,7 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 * ~ 1915 tweets about the paper
 * Broad media coverage
 * something reliable on relevance for politics?
+*
 
 ## Data gathering
 * Entomological Society Krefeld
