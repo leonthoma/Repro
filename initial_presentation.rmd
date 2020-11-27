@@ -83,27 +83,27 @@ knitr::include_graphics("Malaise_trap.JPG")
 
 ## Our appoach
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("plot_layout.JPG")
 ```
 
 ## Regression towards the mean
 
 ```{r, echo=FALSE}
-knitr::include_graphics("RTM_1.JPG")
+knitr::include_graphics("true_mean.JPG")
 ```
 
 ## Regression towards the mean
 
 ```{r, echo=FALSE}
-knitr::include_graphics("RTM_2.JPG")
+knitr::include_graphics("baseline.JPG")
 ```
 
 
 ## Regression towards the mean
 
 ```{r, echo=FALSE}
-knitr::include_graphics("RTM_3.JPG")
+knitr::include_graphics("follow_up.JPG")
 ```
 
 # RTM effet in Hallmann
