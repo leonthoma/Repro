@@ -25,16 +25,14 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 
 ## Impact of the paper / relevance
 * Included in 9 Wikipedia articles
-* ~ 1915 tweets about the paper
 * Broad media coverage
-* something reliable on relevance for politics?
-*
+* Alone 1306 citations on Google Scholar
 
 ## Data gathering
 * Entomological Society Krefeld
 * Standardized protocol
 * Malaise traps (~ every 11 days emptied)
-* catchments between 1989 and 2016
+* sampling between 1989 and 2016
 * All locations within protected areas (Nature reserves, Natura 2000, Protected landscape areas)
 
 ```{r, echo=FALSE, out.width="50%"}
@@ -58,18 +56,36 @@ knitr::include_graphics("Malaise_trap.JPG")
 + Latent daily biomass is represented by log-normal distribution
 
 ## Biomass modelling part 2
-+ Something about the bayesian statistics...
-+ Jags modeling
-* they use very broad priors, so probably no biase towards this
+* Different models fitted (basic, weather, vegetation, etc...)
+* Final model with different covariates, to find predictors for decrease
+* Basic model for main results
 
 ## Bayesian Modeling
 | Frequentist | Bayesian |
 | ---- | ---- |
 | Probability is "long-run frequency" | Probability is "degree of certainty" |
-| $P(X \mid \theta)$ is a sampling distribution | $P(X \mid \theta)$ is a likelihood |
 | "How likely is the data given our parameters" | "How likely is the parameter given our data" |
-| No prior | Prior |
 | Confidence Intervals | Credibility Intervals |
+
+## Criticism
+* years 1989 and 2014 are over-represented
+* few locations were resampled
+* only one trap per location
+* the exposure time varies greatly between years
+
+
+## What is critical about the paper / improvement
+* Unknown procedure of plot selection (stage of data collection)
+* No "control" plots
+* Is there a bias towards plots richer in biomass at the beginning of the study?
+* Unbalanced study design, some plots are observed twice, some not
+* Huge uncertainty about drivers of the decline
+
+## Our appoach
+
+```{r, echo=FALSE}
+knitr::include_graphics("plot_layout.JPG")
+```
 
 ## Regression towards the mean
 
@@ -90,19 +106,17 @@ knitr::include_graphics("RTM_2.JPG")
 knitr::include_graphics("RTM_3.JPG")
 ```
 
-## What is critical about the paper / improvement
-* Unknown procedure of plot selection (stage of data collection)
-* No "control" plots
-* Is there a bias towards plots richer in biomass at the beginning
-* Unbalanced study design, some plots are observed twice, some not
-* Huge uncertainty about drivers of the decline
+# RTM effet in Hallmann
+
+```{r, echo=FALSE}
+knitr::include_graphics("true_rtm_change.JPG")
+```
+
+
 
 ## How are we planning to reanalyse it
 * not using all years of plots
-+ to treat for regression towards the mean
 
-
-## Further description of Our plan to reanalyse it
 
 ## what do we expect from our reanalysis
 * a qualified guess, if regression to the mean influenced the results of this paper
@@ -111,7 +125,7 @@ knitr::include_graphics("RTM_3.JPG")
 
 ## How could our reanalysis be restricted
 * We will not find further predictors nor explain effects of temporal change
-* 
+
 
 ## References
 
