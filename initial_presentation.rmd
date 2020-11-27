@@ -102,13 +102,13 @@ knitr::include_graphics("baseline.JPG")
 ## Regression towards the mean
 
 ```{r, echo=FALSE}
-knitr::include_graphics("first_last.JPG")
+knitr::include_graphics("follow_up.JPG")
 ```
 
 ## Possible RTM effect in Hallmann
 
 ```{r, echo=FALSE}
-knitr::include_graphics("true_rtm_change.JPG")
+knitr::include_graphics("first_last.JPG")
 ```
 
 * Our solution: Only use first year of every plot
