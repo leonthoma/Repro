@@ -32,7 +32,7 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 * Entomological Society Krefeld
 * Standardized protocol
 * Malaise traps (~ every 11 days emptied)
-* sampling between 1989 and 2016
+* Sampling between 1989 and 2016
 * All locations within protected areas (Nature reserves, Natura 2000, Protected landscape areas)
 
 ```{r, echo=FALSE, out.width="50%"}
@@ -43,16 +43,16 @@ knitr::include_graphics("Malaise_trap.JPG")
 ## Description of the dataset
 * Data collected between 1989 and 2016 (96 unique location-year combinations)
 * Mostly one sample per location
-* samples spanning from spring to autmumn, diverse sampling duration
+* Samples spanning from spring to autmumn, diverse sampling duration
 * Predictor variables collected from various sources
  + Aerial photographs, Plant inventories, 169 climate stations
 
 ## The insect biomass model of Hallmann et al.
 * Different exposure times of insect traps / catchinng intervals
-+ induces heterodescadicity
++ Induces heterodescadicity
 * Biomass can take positive values
 * Biomass is modeled as sum of expected latent biomass
-+ mass is assumed to be normaly distributed over the sum of latent expected daily mass
++ Mass is assumed to be normaly distributed over the sum of latent expected daily mass
 + Latent daily biomass is represented by log-normal distribution
 
 ## Biomass modelling part 2
@@ -68,10 +68,10 @@ knitr::include_graphics("Malaise_trap.JPG")
 | Confidence Intervals | Credibility Intervals |
 
 ## Criticism
-* years 1989 and 2014 are over-represented
-* few locations were resampled
-* only one trap per location
-* the exposure time varies greatly between years
+* Years 1989 and 2014 are over-represented
+* Few locations were resampled
+* Only one trap per location
+* The exposure time varies greatly between years
 
 
 ## What is critical about the paper / improvement
@@ -106,25 +106,18 @@ knitr::include_graphics("baseline.JPG")
 knitr::include_graphics("follow_up.JPG")
 ```
 
-# RTM effet in Hallmann
+## Possible RTM effect in Hallmann
 
 ```{r, echo=FALSE}
 knitr::include_graphics("true_rtm_change.JPG")
 ```
 
+* Our solution: Only use first year of every plot
 
-
-## How are we planning to reanalyse it
-* not using all years of plots
-
-
-## what do we expect from our reanalysis
-* a qualified guess, if regression to the mean influenced the results of this paper
+## Goals
+* Rule out regression to the mean effect
 * Assessing the quality of the stated decline on insect biomass
 * Development of our skills in bayesian statistics
-
-## How could our reanalysis be restricted
-* We will not find further predictors nor explain effects of temporal change
 
 
 ## References
