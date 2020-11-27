@@ -4,7 +4,6 @@ author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
 date: "27.11.2020"
 output:
   ioslides_presentation: default
-bibliography: Literature_Presentation.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -83,13 +82,13 @@ knitr::include_graphics("Malaise_trap.JPG")
 
 ## Our appoach
 
-```{r, echo=FALSE, out.width="100%"}
+```{r, echo=FALSE, out.width="85%"}
 knitr::include_graphics("plot_layout.JPG")
 ```
 
 ## Regression towards the mean
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="70%"}
 knitr::include_graphics("true_mean.JPG")
 ```
 
@@ -103,7 +102,7 @@ knitr::include_graphics("baseline.JPG")
 ## Regression towards the mean
 
 ```{r, echo=FALSE}
-knitr::include_graphics("follow_up.JPG")
+knitr::include_graphics("first_last.JPG")
 ```
 
 ## Possible RTM effect in Hallmann
@@ -119,7 +118,5 @@ knitr::include_graphics("true_rtm_change.JPG")
 * Assessing the quality of the stated decline on insect biomass
 * Development of our skills in bayesian statistics
 
-
-## References
 
 
