@@ -1,5 +1,7 @@
 
 Coding:
+  - How good is the  model? Predictie precision, accuracy, performance of data (e.g. MSE, 
+  - posterior predictive (graphical) check
   - Model diagnostics
   - Ancova?
   - Graphics (for final presentation and report)
