@@ -3,6 +3,10 @@ Coding:
   - How good is the  model? Predictie precision, accuracy, performance of data (e.g. MSE, 
   - posterior predictive (graphical) check
   - Model diagnostics
+    - Test run with limited number of iterations
+    - Get an Idea of the "goodness" of the model
+  - Add resgression line to plots
+  - Confidence intervals
   - Ancova?
   - Graphics (for final presentation and report)
 
@@ -17,10 +21,11 @@ Final Presentation:
   - structure
   - Include Graphics
   - Content
+    - what did we learn
   
   
   
- Report:
+ Report: -> 
   - Create "template"/Layout
   - Structure
   - Content: Bullet points for a start
