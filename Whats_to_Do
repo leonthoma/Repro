@@ -8,12 +8,12 @@ Coding:
   - Add resgression line to plots
   - Confidence intervals
   - Ancova?
-  - Graphics (for final presentation and report)
+  - Graphics (for final presentation (and report))
 
 R-Script to hand in:
   - merge relevant scripts to one
   - assure its executable
-  - Structure in a ,eamimgfull way
+  - Structure in a meamimgfull way
   - comment commands
 
 
@@ -21,7 +21,9 @@ Final Presentation:
   - structure
   - Include Graphics
   - Content
-    - what did we learn
+    - what we learned
+    - could our hypothesis be validated ?
+    - Estimate how "good" the paper is
   
   
   
@@ -29,6 +31,11 @@ Final Presentation:
   - Create "template"/Layout
   - Structure
   - Content: Bullet points for a start
+      - what did the authors do
+      - why could there be a problem with it
+      - how we checked for this problem/hypothesis
+      - could our hypothesis be validated ?
+      - Estimate how "good" the paper is
   - Graphics (? maybe not, because of limited space)
   - Ressources/Literature database (I would recommend Bibtext/JAbref, easy to connect to markdown and/or Latex
   
