@@ -1,5 +1,10 @@
 ## Hallmann 2017
 
+setwd("~/Documents/Uni/Umwi/M.sc./Repro")
+
+#load("full_basic")
+
+
 library(R2jags)
 library(RCurl) # used for loading data from github
 library(ggplot2)
@@ -12,8 +17,8 @@ library(purrr)
 url_1 <- getURL("https://raw.githubusercontent.com/leonthoma/Repro/master/Hallmann_s1_data.csv")
 url_2 <- getURL("https://raw.githubusercontent.com/leonthoma/Repro/master/Hallmann_s2_data.csv")
 
-data <- read.csv(text = url_1, header = TRUE, sep = ",")
-model.frame <- read.csv(text = url_2, header = TRUE, sep = ",")
+data <- read.csv(text = url_1, header = TRUE, sep = ",", stringsAsFactors = T)
+model.frame <- read.csv(text = url_2, header = TRUE, sep = ",", stringsAsFactors = T)
 
 # summary(data)
 # summary(model.frame)
@@ -83,7 +88,6 @@ jagsmod0
 # ---- Re-Analysis ----
   # ---- Data wrangling ----
 
-
 # Filter Biomass data (only first Dataset of every plot)
 py <- select(data, c(plot, year)) %>%
   group_by(plot) %>%
@@ -97,7 +101,7 @@ new_plots <- group_by(py, plot) %>%
 new_data <- semi_join(data, new_plots, by = c("plot", "year"))
 new_model.frame <- semi_join(model.frame, new_plots, by = c("plot", "year"))
 
-  # ---- Null model ----
+# ---- Null model ----
 # New Null model (with meaningful/unambiguous variable names)
 newjagsdataNull <- list(
   m_bio = new_data$biomass,
@@ -136,7 +140,7 @@ newjagsdataNull <- list(
 # g_intcp ~ dnorm(0,.01) # global intercept (see eq. 4 in paper [c])
 # b[1] <- 0 
 # for (i in 2:3) {b[i] ~ dnorm(0, .01)} # Habitat cluster 2 & 3 covariates
-# for (i in 1:2) {c[i] ~ dnorm(0, .01)} # coef for daynr & naynr^2 covariates
+# for (i in 1:2) {c[i] ~ dnorm(0, .01)} # coef for daynr & daynr^2 covariates
 # sdhat ~ dunif(0, 5) # Estimated sd
 # lvar <- pow(sdhat, 2) # Residual variance of daily log-biomass
 # for(i in 1:nrandom) {
@@ -152,11 +156,12 @@ newjagsdataNull <- list(
 # Run the model
 parametersNull <- c("g_intcp", "b", "c", "eps", "sdhat", "sd.re")
 newjagsmod0 <- jags(newjagsdataNull, inits = NULL, parametersNull,
-                 "newNullModel.jag", n.chains = 3, n.iter = 120, n.burnin = 20,
-                 n.thin = 10)
+                 "newNullModel.jag", n.chains = 3,
+
+                                  n.thin = 10)
 newjagsmod0
 
-  # ---- Basic Model ----
+# ---- Basic Model ----
 newjagsdataBasic <- list(
   m_bio = new_data$biomass,
   tau1 = with(new_model.frame, tapply(1:nrow(new_model.frame), potID, min)),
@@ -179,7 +184,7 @@ newjagsdataBasic <- list(
 # cat("model{
 # ## Likelihood function for the latent expected daily biomass
 # for (i in 1:n) {
-# m_bio[i] ~ dnorm(sum(y[tau1[i]:tau2[i]]), sig_sq[i])
+# m_bio[i] ~ dnorm(sum(z[tau1[i]:tau2[i]]), sig_sq[i])
 # sig_sq[i] <- 1/Var[i]
 # Var[i] <- sum(vr[tau1[i]:tau2[i]])
 # }
@@ -204,7 +209,7 @@ newjagsdataBasic <- list(
 # for (i in 1:nrandom) {
 # eps[i] ~ dnorm(0, tau.re)
 # }
-# tau.re<- pow(sd.re, -2)
+# tau.re <- pow(sd.re, -2)
 # sd.re ~ dunif(0, 1)
 # }
 # ")
@@ -212,14 +217,69 @@ newjagsdataBasic <- list(
 }
 
 # Run the model
-parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
-jagsmodBasic <- jags(newjagsdataBasic, inits = NULL, parameters = parametersBasic,
-                    "BasicModel.jag", n.chains = 3, n.iter = 240,
-                    n.burnin = 40, n.thin = 10)
+# parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
+# jagsmodBasic <- jags(newjagsdataBasic, inits = NULL,
+#                     file = "BasicModel.jag", n.iter = 12000, n.burnin = 2000,
+#                     n.chains = 3, n.thin = 10)
 
 jagsmodBasic
 
-  # ---- Visualization ----
+## n.sims >> n.eff -> suggesting autocorrelation; try higher thinning
+## Rhat vals > 1.02 -> need to rerun with more iterations
+
+## ---- Calculate predicted values ----
+# Get mean parameter values from posterior
+parms_mean <- jagsmodBasic$BUGSoutput$mean # subset to exclude deviance and sd.re (8, 74)
+
+
+# Calculate predicted biomass
+# Helper functions
+y <- function(x) {
+  res <- parms_mean$g_intcp + parms_mean$log.lambda * newjagsdataBasic$year[x] +
+    parms_mean$c[1] * newjagsdataBasic$daynr[x] + parms_mean$c[2] *
+    newjagsdataBasic$daynr2[x] + parms_mean$c[3] * newjagsdataBasic$daynr[x] *
+    newjagsdataBasic$year[x] + parms_mean$c[4] * newjagsdataBasic$daynr2[x] *
+    newjagsdataBasic$year[x] + parms_mean$b[newjagsdataBasic$loctype[x]] +
+    parms_mean$eps[newjagsdataBasic$plot[x]]
+  
+  return(res)
+}
+
+z <- function(x) exp(y(x))
+
+vr <- function(x) {
+  exp(2 * y(x) + (.41 ^ 2)) * (exp((.41 ^ 2)) - 1)
+}
+
+var <- function(x) {
+  t_1 <- as.vector(newjagsdataBasic$tau1[x])
+  t_2 <- as.vector(newjagsdataBasic$tau2[x])
+  ints <- map(x, ~ seq(t_1[.x], t_2[.x]))
+  
+  unlist(map(x, ~ sum(vr(unlist(ints[.x])))))
+}
+
+## unclear about x arg in dnorm
+m_bio <- function(x) {
+  t_1 <- as.vector(newjagsdataBasic$tau1[x])
+  t_2 <- as.vector(newjagsdataBasic$tau2[x])
+  ints <- map(x, ~ seq(t_1[.x], t_2[.x]))
+  
+  z <- unlist(map(x, ~ sum(z(unlist(ints[.x])))))
+ 
+  res <- dnorm(x = x, mean = z, sd =  sqrt(1/unlist(var(x))))
+  
+  return(res)
+}
+
+# ---- Diagnostics ----
+  # Trace plot
+  traceplot(jagsmodBasic)
+
+  # Gelman
+  gelman.diag(jagsmodBasic)
+  
+# ---- Visualization ----
 # Custom palette to match colors from paper
 my_pal <- c("#f46d43", "#fdae61", "#fee090", "#ffffbf", "#e0f3f8", "#abd9e9",
             "#74add1", "#4575b4")
@@ -260,49 +320,3 @@ ggplot(s_bm_data) +
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Day of year")
   
-## Scatterplot RTM effect
-# Following Barnett et. al 2004; Fig. 3
-# Extracting resampled plots
-re_plots <- group_by(py, plot) %>% tally() %>% filter(n > 1)
-
-# Create new df
-scat_data <- semi_join(data, re_plots, by = "plot") %>%
-  select(c(plot, year, biomass))
-
-## Issues:
-## not same no of measurements per year
-group_by(scat_data, plot, year) %>% tally()
-## Biomass vals have to be normally distributed
-
-## NOT RUN
-# # Calculate change (i.e. follow-up - baseline value)
-# plot_vec <- levels(scat_data$plot)
-# 
-# chg_fun <- function(plt) {
-#   y_val <- unique(unlist(filter(scat_data, plot == plt) %>% select(year))) # get year
-#   y_1 <- min(y_val) # get base year
-#   
-#   if (length(y_val) > 2) {
-#     y_2 <- sort(y_val)[2] 
-#   } else {
-#     y_2 <- max(y_val)
-#   } # get follow-up year
-#   
-#   bm_1 <- unlist(filter(scat_data, plot == plt) %>%
-#     filter(year == y_1) %>% select(biomass)) # get biomass vals of base year
-#   bm_2 <- unlist(filter(scat_data, plot == plt) %>%
-#     filter(year == y_2) %>% select(biomass)) # get biomass vals of follow-up year
-#   
-#   n_1 <- length(bm_1)
-#   n_2 <- length(bm_2)
-#   ifelse(n_1 > n_2, yes = bm_1 <- bm_1[1:n_2], no = bm_2 <- bm_2[1:n_1]) # match lengths of bm vecs
-#   
-#   res <- as.vector(bm_2 - bm_1)
-#   print(res)
-# }
-# 
-# for (i in seq_along(plot_vec)) {
-#   print(plot_vec[i])
-#   chg_fun(plot_vec[i])
-# }
-
