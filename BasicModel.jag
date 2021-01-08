@@ -1,7 +1,7 @@
 model{
 ## Likelihood function for the latent expected daily biomass
 for (i in 1:n) {
-m_bio[i] ~ dnorm(sum(y[tau1[i]:tau2[i]]), sig_sq[i])
+m_bio[i] ~ dnorm(sum(z[tau1[i]:tau2[i]]), sig_sq[i])
 sig_sq[i] <- 1/Var[i]
 Var[i] <- sum(vr[tau1[i]:tau2[i]])
 }
