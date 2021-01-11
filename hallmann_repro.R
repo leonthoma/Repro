@@ -234,20 +234,19 @@ parms_mean <- jagsmodBasic$BUGSoutput$mean # subset to exclude deviance and sd.r
 # Calculate predicted biomass
 # Helper functions
 y <- function(x) {
-  res <- parms_mean$g_intcp + parms_mean$log.lambda * newjagsdataBasic$year[x] +
+  parms_mean$g_intcp + parms_mean$log.lambda * newjagsdataBasic$year[x] +
     parms_mean$c[1] * newjagsdataBasic$daynr[x] + parms_mean$c[2] *
     newjagsdataBasic$daynr2[x] + parms_mean$c[3] * newjagsdataBasic$daynr[x] *
     newjagsdataBasic$year[x] + parms_mean$c[4] * newjagsdataBasic$daynr2[x] *
     newjagsdataBasic$year[x] + parms_mean$b[newjagsdataBasic$loctype[x]] +
     parms_mean$eps[newjagsdataBasic$plot[x]]
-  
-  return(res)
 }
 
 z <- function(x) exp(y(x))
 
 vr <- function(x) {
-  exp(2 * y(x) + (.41 ^ 2)) * (exp((.41 ^ 2)) - 1)
+  unlist(map(x, ~ exp(2 * y(.x) + (parms_mean$sdhat^2)) *
+               (exp((parms_mean$sdhat^2)) - 1)))
 }
 
 # Set tau & intervals
@@ -255,21 +254,19 @@ vr <- function(x) {
   t_2 <- as.vector(newjagsdataBasic$tau2[1:nrow(new_data)])
   ints <- map(1:nrow(new_data), ~ seq(t_1[.x], t_2[.x]))
 
-  var <- function(x) {
+var <- function(x) {
   unlist(map(x, ~ sum(vr(unlist(ints[.x])))))
 }
 
-## unclear about x arg in dnorm
 m_bio <- function(x) {
   # t_1 <- as.vector(newjagsdataBasic$tau1[x])
   # t_2 <- as.vector(newjagsdataBasic$tau2[x])
   # ints <- map(x, ~ seq(t_1[.x], t_2[.x]))
   
   z <- unlist(map(x, ~ sum(z(unlist(ints[.x])))))
- 
-  res <- dnorm(x = .x, mean = z, sd =  sqrt(1/unlist(var(.x))))
+  var <- var(x)
   
-  return(res)
+  dnorm(x, mean = z, sd = var)
 }
 
 # ---- Diagnostics ----
@@ -291,7 +288,9 @@ tot_bm_data <- mutate(new_data, bm_p_day = biomass / (to.daynr - from.daynr)) %>
 ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
                         y = bm_p_day,
                         fill = year)) +
+  geom_abline(intercept = parms_mean$g_intcp, slope = parms_mean$log.lambda) +
   geom_boxplot(outlier.alpha = .4, outlier.shape = 1) +
+  geom_line(aes(y = m_bio_vals), data = tot_bm_data) +
   #geom_jitter(width = .1, alpha = .2) + # optional: datapoints
   scale_fill_gradient2(low = "#4575b4",
                         mid = "#fee090",
@@ -300,6 +299,7 @@ ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
                         midpoint = 2005,
                         guide = "none") +
   scale_x_discrete(breaks = seq(1990, 2015, by = 5), drop = F) +
+  scale_y_log10(limits = c(NA, 50)) +
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Year")
 
