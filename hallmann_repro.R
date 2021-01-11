@@ -1,8 +1,7 @@
 ## Hallmann 2017
 
 setwd("~/Documents/Uni/Umwi/M.sc./Repro")
-
-#load("full_basic")
+load("full_basic")
 
 
 library(R2jags)
@@ -217,10 +216,10 @@ newjagsdataBasic <- list(
 }
 
 # Run the model
-# parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
-# jagsmodBasic <- jags(newjagsdataBasic, inits = NULL,
-#                     file = "BasicModel.jag", n.iter = 12000, n.burnin = 2000,
-#                     n.chains = 3, n.thin = 10)
+parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
+jagsmodBasic <- jags(newjagsdataBasic, inits = NULL, parametersBasic,
+                     "BasicModel.jag", n.iter = 12000, n.burnin = 2000,
+                     n.chains = 3, n.thin = 10)
 
 jagsmodBasic
 
@@ -251,23 +250,24 @@ vr <- function(x) {
   exp(2 * y(x) + (.41 ^ 2)) * (exp((.41 ^ 2)) - 1)
 }
 
-var <- function(x) {
-  t_1 <- as.vector(newjagsdataBasic$tau1[x])
-  t_2 <- as.vector(newjagsdataBasic$tau2[x])
-  ints <- map(x, ~ seq(t_1[.x], t_2[.x]))
-  
+# Set tau & intervals
+  t_1 <- as.vector(newjagsdataBasic$tau1[1:nrow(new_data)])
+  t_2 <- as.vector(newjagsdataBasic$tau2[1:nrow(new_data)])
+  ints <- map(1:nrow(new_data), ~ seq(t_1[.x], t_2[.x]))
+
+  var <- function(x) {
   unlist(map(x, ~ sum(vr(unlist(ints[.x])))))
 }
 
 ## unclear about x arg in dnorm
 m_bio <- function(x) {
-  t_1 <- as.vector(newjagsdataBasic$tau1[x])
-  t_2 <- as.vector(newjagsdataBasic$tau2[x])
-  ints <- map(x, ~ seq(t_1[.x], t_2[.x]))
+  # t_1 <- as.vector(newjagsdataBasic$tau1[x])
+  # t_2 <- as.vector(newjagsdataBasic$tau2[x])
+  # ints <- map(x, ~ seq(t_1[.x], t_2[.x]))
   
   z <- unlist(map(x, ~ sum(z(unlist(ints[.x])))))
  
-  res <- dnorm(x = x, mean = z, sd =  sqrt(1/unlist(var(x))))
+  res <- dnorm(x = .x, mean = z, sd =  sqrt(1/unlist(var(.x))))
   
   return(res)
 }
@@ -319,4 +319,3 @@ ggplot(s_bm_data) +
                         guide = "none") +
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Day of year")
-  
