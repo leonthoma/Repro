@@ -1,8 +1,9 @@
 ---
 title: "Comment on Hallmann"
-author: "Valentina Gacitua, Leon XX, Dominik Arend"
+author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
 date: "5 1 2021"
 output: pdf_document
+bibliography: Literature_Comment.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -10,22 +11,50 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # What did the authors do
+Our understanding of the extent and underlying causes of this decline is based on the abundance of single species or taxonomic groups only, rather than changes in insect biomass which is more relevant for ecological functioning. Here, we used a standardized protocol to measure total insect biomass using Malaise traps, deployed over 27 years in 63 nature protection areas in Germany (96 unique location-year combinations) to infer on the status and trend of local entomofauna. Our analysis estimates a seasonal decline of 76%, and mid-summer decline of 82% in flying insect biomass over the 27 years of study.
+
+* ~ 75 % decline in flying insect biomass over 27 years
+* On protected sites of nature conservation
+* Independent on weather, land-use, habitat characteristics
+* ~ 80 % of the effects explaining declines are unknown
+* Highest losses in times of highest biomass
 
 
 # Motivation for the Re-Analysis
+Highly anticipated, cited and relevant paper
+* Included in 9 Wikipedia articles
+* Broad media coverage
+* Alone 1306 citations on Google Scholar
+
+
 
 ## Why could there be a problem in the analysis
+* Years 1989 and 2014 are over-represented
+* Few locations were resampled
+* Only one trap per location
+* The exposure time varies greatly between years
 
-# How did we check for this issue
+In general, a spurious correlation arises when one variable (e.g. mass loss) is part of another variable (e.g. initial mass) and then regressed on it. [@GebhardtHenrich2000]
 
-## Why are we doing it like that?
+
+
+
+
+# How did we check for this issue and Why are we doing it like that?
+* Our solution: Only use first year of every plot
+* not possible to treat for regression of the mean study-design wise
+* just use the first observation of every Plot
 
 ## what did we expect
+* more robust measurement of insect decline
 
 # Our results
 
 ## Could we rule out the estimate of decline?
 
 # Discussion
+
+RTM also appears as a selection phenomenon, emphasizing the need to include control groups in order to make possible adjustments for the bias caused by RTM. [@Blomqvist1987]
+
 
 # Estimate how "good" the paper is
