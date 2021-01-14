@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # What did the authors do
-Our understanding of the extent and underlying causes of this decline is based on the abundance of single species or taxonomic groups only, rather than changes in insect biomass which is more relevant for ecological functioning. Here, we used a standardized protocol to measure total insect biomass using Malaise traps, deployed over 27 years in 63 nature protection areas in Germany (96 unique location-year combinations) to infer on the status and trend of local entomofauna. Our analysis estimates a seasonal decline of 76%, and mid-summer decline of 82% in flying insect biomass over the 27 years of study.
+
 
 * ~ 75 % decline in flying insect biomass over 27 years
 * On protected sites of nature conservation
@@ -19,25 +19,24 @@ Our understanding of the extent and underlying causes of this decline is based o
 * ~ 80 % of the effects explaining declines are unknown
 * Highest losses in times of highest biomass
 
-
+@Hallmann2017 revealed a massive decline in total flying insect biomass. Dramatics being added, this decrease was found to take place on sites of nature conservation. The Authors reported a decline of "More than 75 percent" over 27 years. The majority of contributing effects to this development remains unknown.
 # Motivation for the Re-Analysis
-Highly anticipated, cited and relevant paper
-* Included in 9 Wikipedia articles
-* Broad media coverage
-* Alone 1306 citations on Google Scholar
+We aim to reanalyze this highly relevant paper. Its impact is to this day enormous, resulting in broad media coverage, high citing scores and influence on political decision makers. Therefore we want to asses the robustness of its results, mainly the decline on insect biomass.
 
+Nevertheless we want to point out critical points about the publication, check for its relevance and discuss the paper within the context of our analysis of the data. This bulletpoints give an overview over crucial aspects of the analysis:
 
-
-## Why could there be a problem in the analysis
 * Years 1989 and 2014 are over-represented
 * Few locations were resampled
 * Only one trap per location
-* The exposure time varies greatly between years
+* The exposure time varies greatly among years
+* Unknown site selection procedure
+* (Lack of control group ?)
+
+The Lack of a control group and the few re-sampling sites arise the suspect of a "regression to the mean problem". This means that of two successive measurements, the second one tends to be closer to the true underlying mean [@Kelly2005]. @Barnett2004 describe regression to the mean (RTM) as a statistical phenomenon were the normal variation of repeated measurements appears to be a real change, simply because the often the measurement is repeated, the closer it reaches to the mean. Further RTM can appear as a selection phenomenon, when there is no controll group and not a random sampling of measurements sites or individuals [@Blomqvist1987]. Both cases could be anticipated in the present publication. Since we could not test the results of @Hallmann2017 on RTM by redesigning the sampling design, we tried to outrule the RTM effect by including only the first year of sampling per insect collection plot.
+
+## Why could there be a problem in the analysis
 
 In general, a spurious correlation arises when one variable (e.g. mass loss) is part of another variable (e.g. initial mass) and then regressed on it. [@GebhardtHenrich2000]
-
-
-
 
 
 # How did we check for this issue and Why are we doing it like that?
@@ -55,6 +54,5 @@ In general, a spurious correlation arises when one variable (e.g. mass loss) is 
 # Discussion
 
 RTM also appears as a selection phenomenon, emphasizing the need to include control groups in order to make possible adjustments for the bias caused by RTM. [@Blomqvist1987]
-
 
 # Estimate how "good" the paper is
