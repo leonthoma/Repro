@@ -22,7 +22,7 @@ model.frame <- read.csv(text = url_2, header = TRUE, sep = ",", stringsAsFactors
 # summary(data)
 # summary(model.frame)
 
-  # ---- Original null Model ----
+# ---- Original null Model ----
 
 ## Indices contain the corresponding rows in model.frame of the  starting (1)
 ## and end (2) position of the potID groups; tau_1/2 in the paper
@@ -43,6 +43,7 @@ jagsdataNull <- list(
 )
 
 ## NOT RUN
+{
 # sink("NullModel.jag")
 # cat("
 # model{
@@ -76,13 +77,35 @@ jagsdataNull <- list(
 # }
 # ")
 # sink(NULL)
-
+}
 # Run the model
 parametersNull <- c("int", "b", "c", "eps", "sdhat", "sd.re")
 jagsmod0 <- jags(jagsdataNull, inits = NULL, parametersNull,
                 "NullModel.jag", n.chains = 3, n.iter = 120, n.burnin = 20,
                 n.thin = 10)
 jagsmod0
+
+# ---- Original basic model ----
+jagsdataBasic <- list(
+  m_bio = data$biomass,
+  tau1 = with(model.frame, tapply(1:nrow(model.frame), potID, min)),
+  tau2 = with(model.frame, tapply(1:nrow(model.frame), potID, max)),
+  plot = as.numeric(model.frame$plot),
+  loctype = as.numeric(data$location.type[match(data$potID,data$potID)]),
+  daynr = as.numeric((model.frame$daynr-mean(data$mean.daynr)) / sd(data$mean.daynr)),
+  daynr2 = as.numeric((model.frame$daynr-mean(data$mean.daynr)) / sd(data$mean.daynr))^2,
+  year = model.frame$year - 1988,
+  ndaily = nrow(model.frame),
+  n = nrow(data),
+  nrandom = max(as.numeric(model.frame$plot))
+)
+
+parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
+oldjagsmodBasic <- jags(jagsdataBasic, inits = NULL, parametersBasic, 
+                        "BasicModel.jag", n.iter = 12000, n.burnin = 2000, 
+                        n.chains = 3, n.thin = 10)
+
+old_parms_mean <- oldjagsmodBasic$BUGSoutput$mean
 
 # ---- Re-Analysis ----
   # ---- Data wrangling ----
@@ -216,24 +239,61 @@ newjagsdataBasic <- list(
 }
 
 # Run the model
-parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
 jagsmodBasic <- jags(newjagsdataBasic, inits = NULL, parametersBasic,
                      "BasicModel.jag", n.iter = 12000, n.burnin = 2000,
                      n.chains = 3, n.thin = 10)
 
 jagsmodBasic
 
-## n.sims >> n.eff -> suggesting autocorrelation; try higher thinning
-## Rhat vals > 1.02 -> need to rerun with more iterations
+# ---- Diagnostics ----
+  # Trace plot
+  traceplot(jagsmodBasic)
+
+  # Gelman
+  gelman.diag(jagsmodBasic)
 
 ## ---- Calculate predicted values ----
 # Get mean parameter values from posterior
-parms_mean <- jagsmodBasic$BUGSoutput$mean # subset to exclude deviance and sd.re (8, 74)
+parms_mean <- jagsmodBasic$BUGSoutput$mean 
 
+# 2.4 % credible interval
+parms_mean_lo <- list("b" = as.numeric(jagsmodBasic$BUGSoutput$summary[1:3, 3]),
+                      "c" = as.numeric(jagsmodBasic$BUGSoutput$summary[4:7, 3]),
+                      "deviance" = jagsmodBasic$BUGSoutput$summary[8, 3],
+                      "eps" = as.numeric(jagsmodBasic$BUGSoutput$summary[9:71, 3]),
+                      "g_intcp" = jagsmodBasic$BUGSoutput$summary[72, 3],
+                      "log.lambda" = jagsmodBasic$BUGSoutput$summary[73, 3],
+                      "sd.re" = jagsmodBasic$BUGSoutput$summary[74, 3],
+                      "sdhat" = jagsmodBasic$BUGSoutput$summary[75, 3])
 
-# Calculate predicted biomass
+# 97.5 % credible interval
+parms_mean_hi <- list("b" = as.numeric(jagsmodBasic$BUGSoutput$summary[1:3, 7]),
+                       "c" = as.numeric(jagsmodBasic$BUGSoutput$summary[4:7, 7]),
+                       "deviance" = jagsmodBasic$BUGSoutput$summary[8, 7],
+                       "eps" = as.numeric(jagsmodBasic$BUGSoutput$summary[9:71, 7]),
+                       "g_intcp" = jagsmodBasic$BUGSoutput$summary[72, 7],
+                       "log.lambda" = jagsmodBasic$BUGSoutput$summary[73, 7],
+                       "sd.re" = jagsmodBasic$BUGSoutput$summary[74, 7],
+                       "sdhat" = jagsmodBasic$BUGSoutput$summary[75, 7])
+  
+  
+# Set tau & intervals of days
+t_1 <- as.vector(newjagsdataBasic$tau1[1:nrow(new_data)])
+t_2 <- as.vector(newjagsdataBasic$tau2[1:nrow(new_data)])
+ints <- map(1:nrow(new_data), ~ seq(t_1[.x], t_2[.x]))
+  
+# Set year intervals
+t_1_y <- with(new_data, tapply(1:nrow(new_data), year, min))
+t_2_y <- with(new_data, tapply(1:nrow(new_data), year, max))
+ints_y <- map(1:length(t_1_y), ~ seq(t_1_y[.x], t_2_y[.x]))
+
 # Helper functions
-y <- function(x) {
+y <- function(x, type) {
+  parms_mean <- switch(type,
+                  base = parms_mean,
+                  low = parms_mean_lo,
+                  high = parms_mean_hi)
+    
   parms_mean$g_intcp + parms_mean$log.lambda * newjagsdataBasic$year[x] +
     parms_mean$c[1] * newjagsdataBasic$daynr[x] + parms_mean$c[2] *
     newjagsdataBasic$daynr2[x] + parms_mean$c[3] * newjagsdataBasic$daynr[x] *
@@ -242,39 +302,65 @@ y <- function(x) {
     parms_mean$eps[newjagsdataBasic$plot[x]]
 }
 
-z <- function(x) exp(y(x))
+z <- function(x, ...) exp(y(x, ...))
 
-vr <- function(x) {
-  unlist(map(x, ~ exp(2 * y(.x) + (parms_mean$sdhat^2)) *
-               (exp((parms_mean$sdhat^2)) - 1)))
-}
+# Calculate predicted biomass
+z_val <- unlist(map(1:nrow(new_data), ~ sum(z(unlist(ints[.x]), "base"))))
+z_val_y <- unlist(map(1:length(ints_y), ~ sum(z_val[unlist(ints_y[.x])])))
 
-# Set tau & intervals
-  t_1 <- as.vector(newjagsdataBasic$tau1[1:nrow(new_data)])
-  t_2 <- as.vector(newjagsdataBasic$tau2[1:nrow(new_data)])
-  ints <- map(1:nrow(new_data), ~ seq(t_1[.x], t_2[.x]))
+# 2.5 % credible interval
+z_val_lo <- unlist(map(1:nrow(new_data), ~ sum(z(unlist(ints[.x]), "low"))))
+z_val_y_lo <- unlist(map(1:length(ints_y), ~ sum(z_val_lo[unlist(ints_y[.x])])))
 
-var <- function(x) {
-  unlist(map(x, ~ sum(vr(unlist(ints[.x])))))
-}
+# 97.5 % credible interval
+z_val_hi <- unlist(map(1:nrow(new_data), ~ sum(z(unlist(ints[.x]), "high"))))
+z_val_y_hi <- unlist(map(1:length(ints_y), ~ sum(z_val_hi[unlist(ints_y[.x])])))
 
-m_bio <- function(x) {
-  # t_1 <- as.vector(newjagsdataBasic$tau1[x])
-  # t_2 <- as.vector(newjagsdataBasic$tau2[x])
-  # ints <- map(x, ~ seq(t_1[.x], t_2[.x]))
+m_bio_df <- data.frame("year" = 1:26, "m_bio" = NA, "m_bio_lo" = NA,
+                       "m_bio_hi" = NA) # Create initial df
+
+# Fill df; set missing years to previous val
+fill <- function(type) {
+  coln <- switch(type,
+                     base = 2,
+                     low = 3,
+                     high = 4)
   
-  z <- unlist(map(x, ~ sum(z(unlist(ints[.x])))))
-  var <- var(x)
-  
-  dnorm(x, mean = z, sd = var)
-}
+  z_val_y <- switch(type,
+                    base = z_val_y,
+                    low = z_val_y_lo,
+                    high = z_val_y_hi)
 
-# ---- Diagnostics ----
-  # Trace plot
-  traceplot(jagsmodBasic)
+  m_bio_df[1:7, coln] <<- z_val_y[1:7]
+  m_bio_df[9, coln] <<- z_val_y[8]
+  m_bio_df[11:13, coln] <<- z_val_y[9:11]
+  m_bio_df[15:26, coln] <<- z_val_y[12:23]
 
-  # Gelman
-  gelman.diag(jagsmodBasic)
+  m_bio_df[8, coln] <<- m_bio_df[7, coln]
+  m_bio_df[10, coln] <<- m_bio_df[9, coln]
+  m_bio_df[14, coln] <<- m_bio_df[13, coln]
+} # helper function
+
+fill("base")
+fill("low")
+fill("high")
+
+# vr <- function(x) {
+#   unlist(map(x, ~ exp(2 * y(.x) + (parms_mean$sdhat^2)) *
+#                (exp((parms_mean$sdhat^2)) - 1)))
+# }
+# 
+# var <- function(x) {
+#   unlist(map(x, ~ sum(vr(unlist(ints[.x])))))
+# }
+# 
+# m_bio <- function(x) {
+#   z <- unlist(map(x, ~ sum(z(unlist(ints[.x])))))
+#   var <- var(x)
+#   
+#   dnorm(x, mean = z, sd = var)
+# }
+
   
 # ---- Visualization ----
 # Custom palette to match colors from paper
@@ -288,20 +374,28 @@ tot_bm_data <- mutate(new_data, bm_p_day = biomass / (to.daynr - from.daynr)) %>
 ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
                         y = bm_p_day,
                         fill = year)) +
-  geom_abline(intercept = parms_mean$g_intcp, slope = parms_mean$log.lambda) +
   geom_boxplot(outlier.alpha = .4, outlier.shape = 1) +
-  geom_line(aes(y = m_bio_vals), data = tot_bm_data) +
-  #geom_jitter(width = .1, alpha = .2) + # optional: datapoints
   scale_fill_gradient2(low = "#4575b4",
                         mid = "#fee090",
                         high = "#f46d43",
                         na.value = "grey50",
                         midpoint = 2005,
                         guide = "none") +
+  geom_abline(intercept = parms_mean$g_intcp,
+              slope = parms_mean$log.lambda) +
+  geom_line(aes(y = log(m_bio), x = year), data = m_bio_df, color = "grey",
+            inherit.aes = F) +
+  geom_line(aes(y = log(m_bio_lo), x = year), data = m_bio_df, color = "grey", 
+            linetype = 2, inherit.aes = F) +
+  geom_line(aes(y = log(m_bio_hi), x = year), data = m_bio_df, color = "grey",
+            linetype = 2, inherit.aes = F) +
+  #geom_jitter(width = .1, alpha = .2) + # optional: datapoints
   scale_x_discrete(breaks = seq(1990, 2015, by = 5), drop = F) +
-  scale_y_log10(limits = c(NA, 50)) +
+  scale_y_continuous(trans = "log",
+                     breaks = c(0.01, .02, .05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50)) +
   theme_classic() +
   labs(y = "Biomass [g/d]", x = "Year")
+
 
 ## Recreate Fig. 2b
 # Season from 1st of April to 30th of October; i.e. Day 91 to 303
