@@ -32,6 +32,6 @@ With 24 000 iterations we tried to provide the same quality as the original anal
 * Our Result to Hallmann
 * Why is Hallmann Right/Wrong
 * How is the Statistical analysis of Hallmann in general
-* (Why is there a need for more research in this area) --> RTM also appears as a selection phenomenon, emphasizing the need to include control groups in order to make possible adjustments for the bias caused by RTM. [@Blomqvist1987]
+* (Why is there a need for more research in this area) Control Group suggestion?? How could this be done? --> RTM also appears as a selection phenomenon, emphasizing the need to include control groups in order to make possible adjustments for the bias caused by RTM. [@Blomqvist1987]
 
 # References
