@@ -10,15 +10,6 @@ bibliography: Literature_Comment.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# What did the authors do
-
-
-* ~ 75 % decline in flying insect biomass over 27 years
-* On protected sites of nature conservation
-* Independent on weather, land-use, habitat characteristics
-* ~ 80 % of the effects explaining declines are unknown
-* Highest losses in times of highest biomass
-
 @Hallmann2017 revealed a massive decline in total flying insect biomass. Dramatics being added, this decrease was found to take place on sites of nature conservation. The Authors reported a decline of "More than 75 percent" over 27 years. The majority of contributing effects to this development remains unknown.
 # Motivation for the Re-Analysis
 We aim to reanalyze this highly relevant paper. Its impact is to this day enormous, resulting in broad media coverage, high citing scores and influence on political decision makers. Therefore we want to asses the robustness of its results, mainly the decline on insect biomass.
@@ -26,33 +17,21 @@ We aim to reanalyze this highly relevant paper. Its impact is to this day enormo
 Nevertheless we want to point out critical points about the publication, check for its relevance and discuss the paper within the context of our analysis of the data. This bulletpoints give an overview over crucial aspects of the analysis:
 
 * Years 1989 and 2014 are over-represented
-* Few locations were resampled
+* Few locations were re-sampled
 * Only one trap per location
 * The exposure time varies greatly among years
 * Unknown site selection procedure
 * (Lack of control group ?)
 
-The Lack of a control group and the few re-sampling sites arise the suspect of a "regression to the mean problem". This means that of two successive measurements, the second one tends to be closer to the true underlying mean [@Kelly2005]. @Barnett2004 describe regression to the mean (RTM) as a statistical phenomenon were the normal variation of repeated measurements appears to be a real change, simply because the often the measurement is repeated, the closer it reaches to the mean. Further RTM can appear as a selection phenomenon, when there is no controll group and not a random sampling of measurements sites or individuals [@Blomqvist1987]. Both cases could be anticipated in the present publication. Since we could not test the results of @Hallmann2017 on RTM by redesigning the sampling design, we tried to outrule the RTM effect by including only the first year of sampling per insect collection plot.
+The Lack of a control group and the few re-sampling sites arise the suspect of a "regression to the mean problem". This means that of two successive measurements, the second one tends to be closer to the true underlying mean [@Kelly2005]. @Barnett2004 describe regression to the mean (RTM) as a statistical phenomenon were the normal variation of repeated measurements appears to be a real change, simply because the often the measurement is repeated, the closer it reaches to the mean. Further RTM can appear as a selection phenomenon, when there is no controll group and not a random sampling of measurements sites or individuals [@Blomqvist1987]. Both cases could be anticipated in the present publication. Since we could not test the results of @Hallmann2017 on RTM by redesigning the sampling design, we tried to outrule the RTM effect by only including the first year of sampling per insect collection plot in our analysis. 
 
-## Why could there be a problem in the analysis
+Following @Hallmann2017 the basic model was calculated to asses the temporal dynamics of flying insect biomass. Calculations of the latent expected daily mass and model specification provided the foot for our model. 
+With 24 000 iterations we tried to provide the same quality as the original analysis. The diagnosis of the model was done nevertheless our model did only differ in being a Subset of the original Data (Maybe no good like this, could sound like we did not much...). 
 
-In general, a spurious correlation arises when one variable (e.g. mass loss) is part of another variable (e.g. initial mass) and then regressed on it. [@GebhardtHenrich2000]
+* Our Result
+* Our Result to Hallmann
+* Why is Hallmann Right/Wrong
+* How is the Statistical analysis of Hallmann in general
+* (Why is there a need for more research in this area) --> RTM also appears as a selection phenomenon, emphasizing the need to include control groups in order to make possible adjustments for the bias caused by RTM. [@Blomqvist1987]
 
-
-# How did we check for this issue and Why are we doing it like that?
-* Our solution: Only use first year of every plot
-* not possible to treat for regression of the mean study-design wise
-* just use the first observation of every Plot
-
-## what did we expect
-* more robust measurement of insect decline
-
-# Our results
-
-## Could we rule out the estimate of decline?
-
-# Discussion
-
-RTM also appears as a selection phenomenon, emphasizing the need to include control groups in order to make possible adjustments for the bias caused by RTM. [@Blomqvist1987]
-
-# Estimate how "good" the paper is
+# References
