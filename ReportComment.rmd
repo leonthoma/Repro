@@ -26,7 +26,18 @@ Nevertheless we want to point out critical points about the publication, check f
 The Lack of a control group and the few re-sampling sites arise the suspect of a "regression to the mean problem". This means that of two successive measurements, the second one tends to be closer to the true underlying mean [@Kelly2005]. @Barnett2004 describe regression to the mean (RTM) as a statistical phenomenon were the normal variation of repeated measurements appears to be a real change, simply because the often the measurement is repeated, the closer it reaches to the mean. Further RTM can appear as a selection phenomenon, when there is no control group and not a random sampling of measurements sites or individuals [@Blomqvist1987]. Both cases could be anticipated in the present publication. Since we could not test the results of @Hallmann2017 on RTM by redesigning the sampling design, we tried to outrule the RTM effect by only including the first year of sampling per insect collection plot in our analysis. 
 
 Following @Hallmann2017 the basic model was calculated to asses the temporal dynamics of flying insect biomass. Calculations of the latent expected daily mass and model specification provided the foot for our model. 
-With 24 000 iterations we tried to provide the same quality as the original analysis. The diagnosis of the model was done nevertheless our model did only differ in being a Subset of the original Data (Maybe no good like this, could sound like we did not much...).
+With 24 000 iterations we tried to provide the same quality as the original analysis. The diagnosis of the model was done nevertheless our model did only differ in being a Subset of the original Data. No problems with did appear, all variables were uncorrelated. 
+
+For the results, our analysis did not differ substantially from @Hallmann2017. The hypothesis of a intensified insect biomass decline due to regression to the mean could not be verified. We report a decline of flying insect biomass by XX % within 27 years. This is a discrepancy by XX % from the original result (~ 75 % decline). A RTM effect is therefore not found. The stated results seem to be robust from this point of view.
+
+Hence our analysis is no cure for the few re-sampled locations and the unknown plot selection procedure. As the data collection was not carried out by the authors of the paper, it remains uncertain if there has been fewer entomological interesting sites left over after years of data collection. This would introduce a decline in insect biomass, caused by plot selection. 
+
+As pointed out, there is no other way to check for RTM via data analysis. @Blomqvist1987 states that RTM is often, like in this case possible, appearing as a selection phenomenon. To introduce control groups is often advised to control RTM effects [@Kelly2005; @Barnett2004]. Within ecological research, investigating temporal changes, this can be hard to implement. In this special case, More than one sampling procedure per location could have introduced an assured measure of temporal change.
+
+Different trap exposure times were treated for. By modeling the biomass of the catches as the sum of expected latent biomass, the authors eliminated this problem. 
+
+* Why different model i
+
 
 * Our Result
 * Our Result to Hallmann
