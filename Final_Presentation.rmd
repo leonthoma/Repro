@@ -2,34 +2,125 @@
 title: "Final Presentation Hallman"
 author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
 date: "22.01.2021"
-output: ioslides_presentation
+output: beamer_presentation
+bibliography: Literature_Comment.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+## Content
+1. Introduction
+2. Our Motivation to re-analyze the paper
+3. Our Aims and objectives
+4. Crucial points in the analysis
+5. Methods
+6. Results
+7. Discussion
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Introduction
+* ~ 75 % decline in flying insect biomass over 27 years
+* On protected sites of nature conservation
+* Independent on weather, land-use, habitat characteristics
+* ~ 80 % of the effects explaining declines are unknown
+* Highest losses in times of highest biomass
+@Hallmann2017
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-
-## Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
+```{r, echo=FALSE, out.width="33%", fig.cap="Temporal distribution of insect biomass at selected locations (Hallmann 2017)"}
+knitr::include_graphics("decline_on_ins_biom.PNG")
 ```
 
-## Slide with Plot
+## Our motivation to re-analyse the paper
 
-```{r pressure}
-plot(pressure)
+```{r, echo=FALSE, out.width="110%"}
+knitr::include_graphics("Image_relevance_of_paper.PDF")
 ```
+
+## Aim for our re-analysis
+* Comprehend the methods used by this highly relevant publication
+* Asses the robustness of decline
+* Therefore rule out any regression to the mean effect
+* Enhance our skills in bayesian statistics
+```{r, echo=FALSE, out.width="50%", fig.cap="J. K. Kruschkes amazon-page image, author of Doing Bayesian Data Ananlysis"}
+knitr::include_graphics("puppies.JPG")
+```
+
+## Possible issues of the paper
+* Years 1989 and 2014 are over-represented
+* Few locations were re-sampled
+* Only one trap per location
+* The exposure time varies greatly among years
+  + Longer in the later part of the data collection
+* Unknown site selection procedure
+* Lack of control group
+
+## Why could this introduce an regression to the mean (RTM) effect?
+* First time sampling a location --> exceptional high insect biomas
+* Second (or third) time sampling the same location --> sampled biomass closer to true mean
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("first_last.JPG")
+```
+
+## Method to prove this hypothesis
+* Only use the first observation of each location
+  + no follow up or baseline observations appear
+* Use the basic model of Hallmann et al.
+  + Which was used for the prediction of the decline
+  + Replicate the model specifications with an other subset of the data
+* Models diagnostics
+* Compare results of both analyses
+* Asses the robustness of the stated decline
+
+## Modelling of the insect biomass decline
+* Bayseian model
+* Priors
+* Fixed and random effects
+* Latent daily (but unobserved) biomass
+
+## Results
+* Our result (only first sampling of every plot) is within xx% of the original result
+* No Regression to the mean found
+* nice graphs
+
+## Our Results and Hallmann et al.s
+* Some other nice graphs
+
+## What could be the reason for this similar results
+* Hallmann et al. did a great job
+* We did a bad job
+* Better explanation :-)
+
+## Slide 12
+
+## Varying trapping exposure intervals
+* The actual catches per trapping bottle did not strongly decline, the strong decline
+only comes about when calculating values per day.
+* biomass collection "saturation" phenomenon?
+
+## Weak explanation of insect biomass decline
+* Negative relationship between trees/forest and flying insect biomass
+  + Insects might be flying higher
+  + further succession of land (from arable to shrubland/forest) affects fling insects
+* Only relevant drivers of decline could potentially only alter behaviour, not abundance of insects
+
+## Overall performance of the analysis
+
+
+## Improvement of the paper? 
+* In this case, a controll group could be:
+  + third or fourth sampling on each location
+
+* @Blomqvist1987 emphasized the need to to include control groups
+  + make adjustments for the RTM effect possible
+
+## RTM in ecology
+* needs to be further included in environmental sciences
+  + "For example, birds feeding nestlings lose weight, but initially heavier birds lose more weight than lighter birds, a result expected from the regression effect." [@Kelly2005; @GebhardtHenrich2000]
+
+```{r, echo=FALSE, out.width="70%", fig.cap="Only two articles are actually on RTM in ecology, cited under 200 times. In Epidemiology, G. Scholar finds > 6 articles on RTM, some cited > 1000 times "}
+knitr::include_graphics("RTM_relevance.PDF")
+```
+## References
+
 
