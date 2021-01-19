@@ -80,7 +80,9 @@ knitr::include_graphics("first_last.JPG")
 
 ## Results
 * Our result (only first sampling of every plot) is within xx% of the original result
+  + We calculated a decline of xx% within 27 years 
 * No Regression to the mean found
+
 * nice graphs
 
 ## Our Results and Hallmann et al.s
@@ -102,10 +104,17 @@ only comes about when calculating values per day.
 * Negative relationship between trees/forest and flying insect biomass
   + Insects might be flying higher
   + further succession of land (from arable to shrubland/forest) affects fling insects
-* Only relevant drivers of decline could potentially only alter behaviour, not abundance of insects
+* Only relevant drivers of decline could potentially only alter behavior, not abundance of insects
 
 ## Overall performance of the analysis
+* The statistical methods were reasonable for the dataset given
+* Most of the criticized issues were introduced by the sampling procedure
+* Although the sampling was carried out by trained amateurs and experts, it was not designed by statisticians, let alone the Team around Hallmann
 
+
+```{r, echo=FALSE, out.width="90%", fig.cap="Headline of an online magazine"}
+knitr::include_graphics("cit_science.JPG")
+```
 
 ## Improvement of the paper? 
 * In this case, a controll group could be:
@@ -114,13 +123,14 @@ only comes about when calculating values per day.
 * @Blomqvist1987 emphasized the need to to include control groups
   + make adjustments for the RTM effect possible
 
-## RTM in ecology
 * needs to be further included in environmental sciences
   + "For example, birds feeding nestlings lose weight, but initially heavier birds lose more weight than lighter birds, a result expected from the regression effect." [@Kelly2005; @GebhardtHenrich2000]
 
-```{r, echo=FALSE, out.width="70%", fig.cap="Only two articles are actually on RTM in ecology, cited under 200 times. In Epidemiology, G. Scholar finds > 6 articles on RTM, some cited > 1000 times "}
+## RTM in ecology
+
+```{r, echo=FALSE, out.width="90%", fig.cap="Only two articles are actually on RTM in ecology, cited under 200 times. In Epidemiology, G. Scholar finds > 6 articles on RTM, some cited > 1000 times "}
 knitr::include_graphics("RTM_relevance.PDF")
 ```
 ## References
-
+\footnotesize
 

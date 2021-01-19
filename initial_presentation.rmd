@@ -2,8 +2,7 @@
 title: "Our Approach on Hallmann 2017"
 author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
 date: "27.11.2020"
-output:
-  ioslides_presentation: default
+output: beamer_presentation
 ---
 
 ```{r setup, include=FALSE}
@@ -37,7 +36,7 @@ knitr::include_graphics("decline_on_ins_biom.PNG")
 ```{r, echo=FALSE, out.width="50%"}
 knitr::include_graphics("Malaise_trap.JPG")
 ```
-[@hallmann2017more]
+(Hallmann et al. 2017)
 
 ## Description of the dataset
 * Data collected between 1989 and 2016 (96 unique location-year combinations)
@@ -59,7 +58,12 @@ knitr::include_graphics("Malaise_trap.JPG")
 * Final model with different covariates, to find predictors for decrease
 * Basic model for main results
 
+
 ## Bayesian Modeling
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("bayes.JPG")
+```
+
 | Frequentist | Bayesian |
 | ---- | ---- |
 | Probability is "long-run frequency" | Probability is "degree of certainty" |
