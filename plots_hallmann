@@ -1,29 +1,31 @@
+
+rm(list = ls())
 setwd("C:/Users/Valentina/Desktop/code")
 load("basicmodel_workspace.RData")
 load("newbasicmodel_workspace.RData")
 
 # see output as MCMC objects
-library(R2jags)
-library(coda)
-library(mcmcplots)
-new_basic_mcmc<- as.mcmc(newjagsmodBasic)
-old_basic_mcmc<- as.mcmc(jagsmodBasic)
-
-new_basic_out<- summary(new_basic_mcmc)
-old_basic_out<- summary(old_basic_mcmc)
-
-
-#interesting parameters
-params_1<- c("log.lambda", "g_intcp", "deviance")
-params_2<- c("deviance")
-
-# DESITY PLOT
-denplot(new_basic_mcmc, parms = params_2)
-denplot(old_basic_mcmc, parms = params_2)
-
-#Diagnostincs PLOTS FOR EVERY PARAMETER
-mcmcplot(new_basic_mcmc)
-mcmcplot(old_basic_mcmc)
+# library(R2jags)
+# library(coda)
+# library(mcmcplots)
+# new_basic_mcmc<- as.mcmc(newjagsmodBasic)
+# old_basic_mcmc<- as.mcmc(jagsmodBasic)
+# 
+# new_basic_out<- summary(new_basic_mcmc)
+# old_basic_out<- summary(old_basic_mcmc)
+# 
+# 
+# #interesting parameters
+# params_1<- c("log.lambda", "g_intcp", "deviance")
+# params_2<- c("deviance")
+# 
+# # DESITY PLOT
+# denplot(new_basic_mcmc, parms = params_2)
+# denplot(old_basic_mcmc, parms = params_2)
+# 
+# #Diagnostincs PLOTS FOR EVERY PARAMETER
+# mcmcplot(new_basic_mcmc)
+# mcmcplot(old_basic_mcmc)
 
 # INTERESTING PLOTS
 
@@ -51,12 +53,14 @@ settings<- function(x){
     model_used <<- jagsmodBasic
     jagsdata_used <<- jagsdataBasic
     data_used <<- data
+    old_bm <- NA
   }
   if(x == "new" ){
     print("new dataframe")
     model_used <<- newjagsmodBasic
     jagsdata_used <<- newjagsdataBasic
     data_used <<- new_data
+    new_bm <- NA
   }
   
   #extracting mean of every parameter
@@ -102,83 +106,74 @@ settings<- function(x){
                          low = parms_mean_lo,
                          high = parms_mean_hi)
     
-    parms_mean$g_intcp + parms_mean$log.lambda * jagsdata_used$year[x] +
+      parms_mean$g_intcp + parms_mean$log.lambda * jagsdata_used$year[x] +
       parms_mean$c[1] * jagsdata_used$daynr[x] + 
-      parms_mean$c[2] *jagsdata_used$daynr2[x] + 
-      parms_mean$c[3] * jagsdata_used$daynr[x] *jagsdata_used$year[x] + 
-      parms_mean$c[4] * newjagsdataBasic$daynr2[x] *jagsdata_used$year[x] + 
+      parms_mean$c[2] * jagsdata_used$daynr2[x] + 
+      parms_mean$c[3] * jagsdata_used$daynr[x] * jagsdata_used$year[x] + 
+      parms_mean$c[4] * jagsdata_used$daynr2[x] *jagsdata_used$year[x] + 
       parms_mean$b[jagsdata_used$loctype[x]] +parms_mean$eps[jagsdata_used$plot[x]]
   }
   
   z <- function(x, ...) exp(y(x, ...))
   
   # Calculate predicted biomass
-  z_val_sum <<- unlist(map(1:nrow(data_used), ~ sum(z(unlist(ints[.x]), "base"))))
-  z_val <<- unlist(map(1:nrow(data_used), ~ mean(z(unlist(ints[.x]), "base"))))
-  z_val_y <<- unlist(map(1:length(ints_y), ~ mean(z_val[unlist(ints_y[.x])])))
+  z_val_sum <- unlist(map(1:nrow(data_used), ~ sum(z(unlist(ints[.x]), "base"))))
+  z_val <- unlist(map(1:nrow(data_used), ~ mean(z(unlist(ints[.x]), "base"))))
+  z_val_y <- unlist(map(1:length(ints_y), ~ mean(z_val[unlist(ints_y[.x])])))
   
   # 2.5 % credible interval
-  z_val_lo <<- unlist(map(1:nrow(data_used), ~ mean(z(unlist(ints[.x]), "low"))))
-  z_val_y_lo <<- unlist(map(1:length(ints_y), ~ mean(z_val_lo[unlist(ints_y[.x])])))
+  z_val_lo <- unlist(map(1:nrow(data_used), ~ mean(z(unlist(ints[.x]), "low"))))
+  z_val_y_lo <- unlist(map(1:length(ints_y), ~ mean(z_val_lo[unlist(ints_y[.x])])))
   
   # 97.5 % credible interval
-  z_val_hi <<- unlist(map(1:nrow(data_used), ~ mean(z(unlist(ints[.x]), "high"))))
-  z_val_y_hi <<- unlist(map(1:length(ints_y), ~ mean(z_val_hi[unlist(ints_y[.x])])))
+  z_val_hi <- unlist(map(1:nrow(data_used), ~ mean(z(unlist(ints[.x]), "high"))))
+  z_val_y_hi <- unlist(map(1:length(ints_y), ~ mean(z_val_hi[unlist(ints_y[.x])])))
   
-
+  
+  m_bio_df <- data.frame("year" = 1:26, "m_bio" = NA, "m_bio_lo" = NA,
+                         "m_bio_hi" = NA) # Create initial df
+  
+  # Fill df; set missing years to previous val
+  fill <- function(type) {
+    coln <- switch(type,
+                   base = 2,
+                   low = 3,
+                   high = 4)
+    
+    z_val_y <- switch(type,
+                      base = z_val_y,
+                      low = z_val_y_lo,
+                      high = z_val_y_hi)
+    
+    m_bio_df[1:7, coln] <<- z_val_y[1:7]
+    m_bio_df[9, coln] <<- z_val_y[8]
+    m_bio_df[11:13, coln] <<- z_val_y[9:11]
+    m_bio_df[15:26, coln] <<- z_val_y[12:23]
+    
+    m_bio_df[8, coln] <<- m_bio_df[7, coln]
+    m_bio_df[10, coln] <<- m_bio_df[9, coln]
+    m_bio_df[14, coln] <<- m_bio_df[13, coln]
+    
+  } # helper function
+  
+  fill("base")
+  fill("low")
+  fill("high")
+  
+  if(x=="old"){
+    old_bm <<- m_bio_df
+  }
+  if(x=="new"){
+    new_bm<<- m_bio_df
+  }
+  
 }
 
 
-#settings(x = "old")
+settings(x = "old")
 settings(x = "new")
 
-
-
-m_bio_df <<- data.frame("year" = 1:26, "m_bio" = NA, "m_bio_lo" = NA,
-                       "m_bio_hi" = NA) # Create initial df
-
-# Fill df; set missing years to previous val
-fill <- function(type) {
-  coln <- switch(type,
-                 base = 2,
-                 low = 3,
-                 high = 4)
-  
-  z_val_y <- switch(type,
-                    base = z_val_y,
-                    low = z_val_y_lo,
-                    high = z_val_y_hi)
-
-  m_bio_df[1:7, coln] <<- z_val_y[1:7]
-  m_bio_df[9, coln] <<- z_val_y[8]
-  m_bio_df[11:13, coln] <<- z_val_y[9:11]
-  m_bio_df[15:26, coln] <<- z_val_y[12:23]
-  
-  m_bio_df[8, coln] <<- m_bio_df[7, coln]
-  m_bio_df[10, coln] <<- m_bio_df[9, coln]
-  m_bio_df[14, coln] <<- m_bio_df[13, coln]
-
-} # helper function
-
-fill("base")
-fill("low")
-fill("high")
-
-# vr <- function(x) {
-#   unlist(map(x, ~ exp(2 * y(.x) + (parms_mean$sdhat^2)) *
-#                (exp((parms_mean$sdhat^2)) - 1)))
-# }
-# 
-# var <- function(x) {
-#   unlist(map(x, ~ sum(vr(unlist(ints[.x])))))
-# }
-# 
-# m_bio <- function(x) {
-#   z <- unlist(map(x, ~ sum(z(unlist(ints[.x])))))
-#   var <- var(x)
-#   
-#   dnorm(x, mean = z, sd = var)
-# }
+biomass_df<- rbind((old_bm%>%mutate(df_used = "old")), (new_bm%>%mutate(df_used = "new")))
 
 
 # ---- Visualization ----
@@ -187,7 +182,7 @@ my_pal <- c("#f46d43", "#fdae61", "#fee090", "#ffffbf", "#e0f3f8", "#abd9e9",
             "#74add1", "#4575b4")
 
 ## Recreate Fig. 2a
-tot_bm_data <- mutate(data_used, bm_p_day = biomass / (to.daynr - from.daynr)) %>%
+tot_bm_data <- mutate(new_data, bm_p_day = biomass / (to.daynr - from.daynr)) %>%
   select(year, bm_p_day)
 
 ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
@@ -202,13 +197,10 @@ ggplot(tot_bm_data, aes(x = factor(year, levels = seq(1989, 2014)),
                        guide = "none") +
   geom_abline(intercept = parms_mean$g_intcp,
               slope = parms_mean$log.lambda) +
-  geom_line(aes(y = m_bio, x = year), data = m_bio_df, color = "red",
-            inherit.aes = F) +
-  geom_line(aes(y = m_bio_lo, x = year), data = m_bio_df, color = "red", 
-            linetype = 2 ,inherit.aes = F) +
-  geom_line(aes(y = m_bio_hi, x = year), data = m_bio_df, color = "red",
-            linetype = 2, inherit.aes = F) +
-  #geom_jitter(width = .1, alpha = .2) + # optional: datapoints
+  geom_line(aes(y = m_bio, x = year, col = df_used), data = biomass_df, inherit.aes = F, size =1 ) +
+  geom_line(aes(y = m_bio_lo, x = year, col = df_used), data = biomass_df, linetype = 2 ,inherit.aes = F, size =1) +
+  geom_line(aes(y = m_bio_hi, x = year, col = df_used), data = biomass_df, linetype = 2, inherit.aes = F, size =1) +
+  scale_color_manual(name = "data used", values = c("#FF8B61","#7F7F7F"))+
   scale_x_discrete(breaks = seq(1990, 2015, by = 5), drop = F) +
   scale_y_continuous(trans = "log",
                      breaks = c(0.01, .02, .05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50)) +
