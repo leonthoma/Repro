@@ -107,10 +107,10 @@ No major influence of temporal effect per plot
 * The effect it has on the results is minor
 
 
-## Varying trapping exposure intervals
+## Varying trap exposure intervals
 * The actual catches per trapping do not strongly decline, decline appears when corrected for daily biomass
 * biomass collection "saturation" phenomenon?
-```{r, echo=FALSE, out.width="60%"}
+```{r, echo=FALSE, out.width="80%"}
 knitr::include_graphics("trap_exp.PNG")
 ```
 
