@@ -81,24 +81,32 @@ knitr::include_graphics("first_last.JPG")
 ## Modelling of the insect biomass decline
 * Bayesian modeling
   + JAGS (Just Another Gibbs Sampler) and R2Jags [@Su2020]
-* Broad priors
-* Plot of Log-LAmda
+* Uninformative priors
 * Fixed and random (site specific random intercept) effects
 * Latent daily (but unobserved) biomass
 
 ## Results
-* Our result (only first sampling of every plot) is within xx% of the original result
-  + We calculated a decline of xx% within 27 years 
+* Our result (only first sampling of every plot)
 * No Regression to the mean found
-* nice graphs
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("boxplot_01.PNG")
+```
 
 ## Our Results and Hallmann et al.s
-* Some other nice graphs
+* The decay was calculated using $log{(\lambda)}$
+    -  6.27% with the original data
+    -  6.19% with one sample per site
+* We calculated a decline within 27 years as follows \n
+   $$(1+log{(\lambda)})^{26} - 1$$
+  + 81,4% with the original data
+  + 81% with our variation of the data 
 
 ## What could be the reason for this similar results
 * Both statistical analyses are fine
   + Our model performed well in diagnostics
-* Density plot
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("density_plot.PNG")
+```
 No major influence of temporal effect per plot
   + Leaving out the second round of sampling on locations sampled twice
 
