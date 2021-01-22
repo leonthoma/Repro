@@ -1,8 +1,11 @@
 ---
-title: "Final Presentation Hallman"
+title: "Final Presentation on Hallman et al."
 author: "Valentina Gacitua, Leon Thoma, Dominik Arend"
 date: "22.01.2021"
-output: beamer_presentation
+output:
+  beamer_presentation:
+    includes:
+      in_header: header.tex
 bibliography: Literature_Comment.bib
 ---
 
@@ -12,8 +15,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Content
 1. Introduction
-2. Our Motivation to re-analyze the paper
-3. Our Aims and objectives
+2. Our motivation to re-analyze the paper
+3. Our aims and objectives
 4. Crucial points in the analysis
 5. Methods
 6. Results
@@ -48,10 +51,12 @@ knitr::include_graphics("puppies.JPG")
 
 ## Possible issues of the paper
 * Years 1989 and 2014 are over-represented
+  + 1989: 162 catchment days, 2014: 348 catchment days
 * Few locations were re-sampled
+ + 26 of 63 one third only
 * Only one trap per location
-* The exposure time varies greatly among years
-  + Longer in the later part of the data collection
+* The trap exposure time varies greatly among years
+  + Longer trapping intervals in the later part of the data collection
 * Unknown site selection procedure
 * Lack of control group
 
@@ -62,7 +67,7 @@ knitr::include_graphics("puppies.JPG")
 knitr::include_graphics("first_last.JPG")
 ```
 
-## Method to prove this hypothesis
+## Methods to prove this hypothesis
 * Only use the first observation of each location
   + no follow up or baseline observations appear
 * Use the basic model of Hallmann et al.
@@ -71,54 +76,60 @@ knitr::include_graphics("first_last.JPG")
 * Models diagnostics
 * Compare results of both analyses
 * Asses the robustness of the stated decline
+* Check like this for RTM
 
 ## Modelling of the insect biomass decline
-* Bayseian model
-* Priors
-* Fixed and random effects
+* Bayesian modeling
+  + JAGS (Just Another Gibbs Sampler) and R2Jags [@Su2020]
+* Broad priors
+* Plot of Log-LAmda
+* Fixed and random (site specific random intercept) effects
 * Latent daily (but unobserved) biomass
 
 ## Results
 * Our result (only first sampling of every plot) is within xx% of the original result
   + We calculated a decline of xx% within 27 years 
 * No Regression to the mean found
-
 * nice graphs
 
 ## Our Results and Hallmann et al.s
 * Some other nice graphs
 
 ## What could be the reason for this similar results
-* Hallmann et al. did a great job
-* We did a bad job
-* Better explanation :-)
+* Both statistical analyses are fine
+  + Our model performed well in diagnostics
+* Density plot
+No major influence of temporal effect per plot
+  + Leaving out the second round of sampling on locations sampled twice
 
-## Slide 12
+## So is there no RTM effect
+* There is regression towards the mean
+* The effect it has on the results is minor
+
 
 ## Varying trapping exposure intervals
-* The actual catches per trapping bottle did not strongly decline, the strong decline
-only comes about when calculating values per day.
+* The actual catches per trapping do not strongly decline, decline appears when corrected for daily biomass
 * biomass collection "saturation" phenomenon?
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("trap_exp.PNG")
+```
 
 ## Weak explanation of insect biomass decline
 * Negative relationship between trees/forest and flying insect biomass
   + Insects might be flying higher
   + further succession of land (from arable to shrubland/forest) affects fling insects
-* Only relevant drivers of decline could potentially only alter behavior, not abundance of insects
+* Only relevant drivers of decline could potentially only alter behavior,but must not affect abundance of insects
+
 
 ## Overall performance of the analysis
 * The statistical methods were reasonable for the dataset given
 * Most of the criticized issues were introduced by the sampling procedure
-* Although the sampling was carried out by trained amateurs and experts, it was not designed by statisticians, let alone the Team around Hallmann
-
-
-```{r, echo=FALSE, out.width="90%", fig.cap="Headline of an online magazine"}
-knitr::include_graphics("cit_science.JPG")
-```
+* Although the sampling was carried out by trained amateurs and experts, it was not designed by statisticians, let alone the team around Hallmann
+* Problem of designing or gaining ecological long term data
 
 ## Improvement of the paper? 
-* In this case, a controll group could be:
-  + third or fourth sampling on each location
+* In this case, a control group could be:
+  + third or fourth sampling round on each location
 
 * @Blomqvist1987 emphasized the need to to include control groups
   + make adjustments for the RTM effect possible
