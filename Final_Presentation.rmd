@@ -49,7 +49,15 @@ knitr::include_graphics("Image_relevance_of_paper.PDF")
 knitr::include_graphics("puppies.JPG")
 ```
 
-## Possible issues of the paper
+## Why could there be a regression to the mean (RTM) effect?
+* First time sampling a location --> exceptional high insect biomas
+* Second (or third) time sampling the same location --> sampled biomass closer to true mean
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("first_last.JPG")
+```
+
+
+## Further possible issues of the paper
 * Years 1989 and 2014 are over-represented
   + 1989: 162 catchment days, 2014: 348 catchment days
 * Few locations were re-sampled
@@ -59,13 +67,6 @@ knitr::include_graphics("puppies.JPG")
   + Longer trapping intervals in the later part of the data collection
 * Unknown site selection procedure
 * Lack of control group
-
-## Why could this introduce an regression to the mean (RTM) effect?
-* First time sampling a location --> exceptional high insect biomas
-* Second (or third) time sampling the same location --> sampled biomass closer to true mean
-```{r, echo=FALSE, out.width="80%"}
-knitr::include_graphics("first_last.JPG")
-```
 
 ## Methods to prove this hypothesis
 * Only use the first observation of each location
