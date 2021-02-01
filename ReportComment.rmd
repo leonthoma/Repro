@@ -10,7 +10,7 @@ bibliography: Literature_Comment.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-@Hallmann2017 concludes that there is a dramatic decline in insect biomass. Considering the fact that this result was found using data gathered in nature conservation sites, makes this finding even more alarming. The Authors reported a decline of "more than 75 percent" over 27 years. The majority of contributing effects to this development remain unknown.
+@Hallmann2017 concludes that there is a dramatic decline in insect biomass. Considering the fact that this result was found using data gathered in nature conservation sites, makes this finding even more alarming. The Authors reported a decline of "more than 75 percent" over 27 years. The majority of contributing effects to this development remains unknown.
 
 We want to point out critical aspects of the publication, check for their relevance in the statistical analysis, and discuss the paper within the context of our approach. The following bullet points give an overview over some aspects of the analysis we identified as problematic:
 
