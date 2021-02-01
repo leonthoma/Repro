@@ -10,7 +10,7 @@ bibliography: Literature_Comment.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-@Hallmann2017 concludes that there is a dramatic decline in insect biomass. Considering the fact that this result was found using data gathered in nature conservation sites, makes this finding even more alarming. The Authors reported a decline of "more than 75 percent" over 27 years. The majority of contributing effects to this development remains unknown.
+@Hallmann2017 concludes that there is a dramatic decline in insect biomass. Considering the fact that this result was found using data gathered in nature conservation sites, makes this finding even more alarming. The authors reported a decline of "more than 75 percent" over 27 years. The majority of contributing effects to this development remains unknown.
 
 We want to point out critical aspects of the publication, check for their relevance in the statistical analysis, and discuss the paper within the context of our approach. The following bullet points give an overview over some aspects of the analysis we identified as problematic:
 
@@ -31,7 +31,7 @@ A possible bias in the site selection process and the low number of re-sampled s
 that were yet to be sampled decreased.
 <!-- We argue, that more than one sampling procedure for every location could have assured measure of temporal change. -->
 <!-- Both cases could be present in the publication of @Hallmann2017.  -->
-Since we could not test the original results on RTM by redefining the sampling design, we tried to rule out the effect, by only including the first year of sampling per plot in our analysis. 
+Since we could not test the results on RTM by redefining the sampling design, we tried to rule out the effect, by only including the first year of sampling per plot in our analysis. 
 
 <!-- As pointed out, there is no other way to check for RTM via data analysis. @Blomqvist1987 states that RTM is often, like in this case, appearing as a selection phenomenon.
 To introduce control groups is often advised to control RTM effects [@Kelly2005; @Barnett2004]. --->
