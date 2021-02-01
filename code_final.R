@@ -6,7 +6,7 @@ library(dplyr)
 library(tidyr)
 library(purrr)
 
-setwd("C:/Users/Valentina/Desktop/code")
+
 #-------------------------------------------------
 # Load data an create the data subset
 #-------------------------------------------------
@@ -116,16 +116,16 @@ jagsdataBasic <- list(
 
   parametersBasic <- c("g_intcp", "log.lambda", "b", "c", "eps", "sdhat", "sd.re")
   
-  #----- MODEL RUN ------ 
+#----- MODEL RUN ------ 
  # newjagsmodBasic <- jags(newjagsdataBasic, inits = NULL, parameters = parametersBasic,
- #                     "BasicModel.jag", n.iter = 24000, n.burnin = 4000,
- #                     n.chains = 3, n.thin = 10)
+ #                     "BasicModel.jag", n.iter = 240, n.burnin = 40,
+ #                     n.chains = 3, n.thin = 1)
  # 
  # newjagsmodBasic
  # 
  # jagsmodBasic <- jags(jagsdataBasic, inits = NULL, parametersBasic,
- #                      "BasicModel.jag", n.iter = 24000, n.burnin = 4000,
- #                      n.chains = 3, n.thin = 10)
+ #                      "BasicModel.jag", n.iter = 240, n.burnin = 40,
+ #                      n.chains = 3, n.thin = 1)
  # 
  # 
  # jagsmodBasic
@@ -150,10 +150,10 @@ settings<- function(x){
     new_bm <- NA
   }
   
-  #extracting mean of every parameter
+  #get mean parameters values from posterior
   parms_mean <- model_used$BUGSoutput$mean
   
-  # 2.4 % credible interval
+  # 2.5 % credible interval
   parms_mean_lo <- list("b" = as.numeric(model_used$BUGSoutput$summary[1:3, 3]),
                         "c" = as.numeric(model_used$BUGSoutput$summary[4:7, 3]),
                         "deviance" = model_used$BUGSoutput$summary[8, 3],
@@ -186,7 +186,7 @@ settings<- function(x){
   
   
   
-  # Helper functions
+  # Helper functions to calculated predicted biomass
   y <- function(x, type) {
     parms_mean <- switch(type,
                          base = parms_mean,
@@ -204,7 +204,6 @@ settings<- function(x){
   z <- function(x, ...) exp(y(x, ...))
   
   # Calculate predicted biomass
-  #z_val_sum <- unlist(map(1:nrow(data_used), ~ sum(z(unlist(ints[.x]), "base"))))
   z_val <- unlist(map(1:nrow(data_used), ~ mean(z(unlist(ints[.x]), "base"))))
   z_val_y <- unlist(map(1:length(ints_y), ~ mean(z_val[unlist(ints_y[.x])])))
   
@@ -276,10 +275,14 @@ new_basic_out<- summary(new_basic_mcmc)
 old_basic_out<- summary(old_basic_mcmc)
 
 #DIAGNOSTICS FOR ALL PARAMETERS
+#check plots for convergence, autocorrelation and distribution 
 mcmcplot(new_basic_mcmc)
 mcmcplot(old_basic_mcmc)
+#overall, the parameters are very similar with the exception of the deviance
+#which is influenced by the sample size
 
 
+# Save parameters of interest to calculate the overall decay
 lambda_old<- old_basic_out$statistics[73,]
 lambda_new<- new_basic_out$statistics[73,]
 
@@ -293,7 +296,7 @@ int_new<- new_basic_out$statistics[72,]
 
 library(ggplot2)
 
-# ----- DENSITY PLOTS TO CHECK THE DATA DISTRIBUTION-----
+# ----- DENSITY PLOTS TO CHECK THE POSTERIOR DISTRIBUTION-----
 tot_bm_data <- mutate(new_data, bm_p_day = biomass / (to.daynr - from.daynr)) %>%
   select(year, bm_p_day)%>%
   mutate(model_data = z_new)
@@ -323,8 +326,6 @@ ggplot(biomass_tot)+
   geom_density(aes(biomass, col = source, fill = source), size = 1, alpha = 0.001)+
   scale_color_manual(values = colores)+
   scale_fill_manual(values =colores)
-
-
 
 
 # ----- RECREATE THE PAPER PLOTS -----
@@ -402,7 +403,7 @@ ggplot(mydata)+
   geom_density(aes(m_biomass), col = "red", linetype =2, size = 1)
 
 
-# VARIATIONS ON EXPOSURE DAY FOR THE ORIGINAL DATASET
+# VARIATIONS ON EXPOSURE TIME FOR THE ORIGINAL DATASET
 ggplot(mydata)+
   geom_boxplot(aes(year, exposure.d, group = year, fill = year))+
   scale_fill_gradient2(low = "#4575b4", mid = "#fee090", high = "#f46d43",midpoint = 2005, na.value = "grey50", guide = "none")+
@@ -435,6 +436,7 @@ new_mydata_fil<- new_mydata%>%
   group_by(year)%>%
   summarise(min_bm = min(model_data), max_bm = max(model_data), mean_bm = mean(model_data))
 
+#rate of growth, calculated as (Vn-V0)/V0
 
 r_mean_old<- (mydata_fil$mean_bm[25] - mydata_fil$mean_bm[1])/mydata_fil$mean_bm[1]
 #r_min<- (mydata_fil$min_bm[25] - mydata_fil$min_bm[1])/mydata_fil$min_bm[1]
@@ -453,6 +455,7 @@ s_old<-mydata%>%
 y27_old<-s_old$so_mean[25]
 y1_old<-s_old$so_mean[1]
 
+#rate of growth, calculated as (Vn-V0)/V0
 (y27_old - y1_old)/y1_old
 
 s_new<-new_mydata%>% 
