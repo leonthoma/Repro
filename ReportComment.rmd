@@ -27,7 +27,7 @@ we want to asses the robustness of its results, mainly the decline of insect bio
 
 A possible bias in the site selection process and the low number of re-sampled sites, give rise to suspect regression to the mean influencing the findings of @Hallmann2017.
 <!-- This means that of two successive measurements, the second one tends to be closer to the true underlying mean [@Kelly2005]. -->
-@Barnett2004 describe regression to the mean (RTM) as a statistical phenomenon were the normal variation of repeated measurements appears to be a real change, simply because with every additional measurement the values are closer to the mean. Furthermore, RTM can appear as a selection phenomenon, when there is no control group and no random sampling of measurements sites or individuals [@Blomqvist1987; @Kelly2005]. Within ecological research, however,  implementing a control group can be impossible, for example when investigating temporal changes as it is the case here. We argue, that during site selection, locations with favorable attributes were chosen to maximize the efficiency of the traps, leading to extreme values in the initial measurements. Over the duration of the sampling process the 'quality' of the sites
+@Barnett2004 describe regression to the mean (RTM) as a statistical phenomenon were the normal variation of repeated measurements appears to be a real change, simply because with every additional measurement the values are closer to the mean. RTM can appear as a selection phenomenon, when there is no control group and no random sampling of measurements sites or individuals [@Blomqvist1987; @Kelly2005]. Within ecological research, however, implementing a control group can be impossible, for example when investigating temporal changes as it is the case here. We argue, that during site selection, locations with favorable attributes were chosen to maximize the efficiency of the traps, leading to extreme values in the initial measurements. Over the duration of the sampling process the 'quality' of the sites
 that were yet to be sampled decreased.
 <!-- We argue, that more than one sampling procedure for every location could have assured measure of temporal change. -->
 <!-- Both cases could be present in the publication of @Hallmann2017.  -->
@@ -36,13 +36,15 @@ Since we could not test the original results on RTM by redefining the sampling d
 <!-- As pointed out, there is no other way to check for RTM via data analysis. @Blomqvist1987 states that RTM is often, like in this case, appearing as a selection phenomenon.
 To introduce control groups is often advised to control RTM effects [@Kelly2005; @Barnett2004]. --->
 
-To deal with the varying exposure times, the insect biomass model was build to account for the temporal differences by calculating the daily latent but unobserved biomass. 
 <!-- Following the methods to calculate the decline on biomass,  -->
-We ran the basic model with a subset of the original data, using the same presets as @Hallmann2017 (i.e. number of iterations, chains, and amount of thinning). The output showed that even with less data, the model diagnostics where similar to the ones of the complete dataset.
+We ran the basic model with a subset of the original data, using the same presets as @Hallmann2017 (i.e. number of iterations, chains, and amount of thinning). The output showed that even with less data, the model diagnostics where similar to the ones of the complete data set.
 
-However, the output did not differ substantially from @Hallmann2017. The hypothesis of a intensified insect biomass decline due to regression to the mean could not be verified. We report a decline of flying insect biomass of 81 % within 27 years during times with the highest biomass. This is a discrepancy of 0.4 % from the original result (~ 81.4 % decline).
+Our result did not differ substantially from @Hallmann2017. The hypothesis of a intensified insect biomass decline due to regression to the mean could not be verified. We report a decline of flying insect biomass of 81 % within 27 years during times with the highest biomass. This is a discrepancy of 0.4 % from the original result (~ 81.4 % decline).
 <!-- A RTM effect is therefore not found. -->
-The original results seem to be robust from this point of view.
+The original results seem to be robust from this point of view. There was, however, another interesting aspect about the original analysis
+
+
+The exposure intervals of the traps tended to increase over time. This could be problematic, since the amount of biomass per trap did not decline significantly over the period of the study. The strong decrease only occurred when calculating daily biomass values. To deal with the varying exposure times, the insect biomass model was build to account for the temporal differences by calculating the daily latent but unobserved biomass. This approach should be valid in the present case, but could hypothetically, lead to a bias, when an effect disrupts the proportionality of biomass and days of exposure by a decline of daily catches.
 
 <!-- Hence, our analysis provides no solution for the few re-sampled locations and the unknown plot selection procedure. As the data collection was not carried out by the authors of the paper, it remains uncertain if there has been fewer entomological interesting sites left over after years of data collection. This would introduce a decline in insect biomass, caused by plot selection. -->
 
@@ -51,11 +53,11 @@ The original results seem to be robust from this point of view.
 
 <!-- What makes the interpretation of the paper discursive, is that the figures illustrating the decline in insect biomass are derived from the final model. Therefore a reproduction of the graphs was not straightforward possible. Nevertheless we were able to produce comparative figures to asses the differences of our and the original analysis. -->
 
-We found the statistical methods used in the analysis to be reasonable, especially for the given data set, as most of the issues we pointed out were introduced by sampling. 
+Ultimately, we found the statistical methods used in the analysis to be reasonable, especially for the given data set, as most of the issues we pointed out were introduced by sampling. 
 
 <!-- Although the sampling was carried out by trained amateurs and experts, it was not designed by statisticians, let alone the Team around Hallmann. -->
 
 <!-- The paper, therefore, remains to be of great relevance and adequate statistical analysis.  -->
-Nevertheless, RTM remains to be a critical aspect in ecological modeling. The low relevance and coverage of RTM in environmental analyses became obvious to us during this course. A quick comparison between search results of RTM effects in ecology revealed this. Compared with RTM in epidemiology (over 100 articles, cited > 1000 times), RTM in ecology was greatly underrepresented (only 3 articles, cited < 200 times). Additionally, in the current issue of Nature magazine, de Haas shares his story of the retraction of an article caused by an overlooked RTM effect [@Haas2021]. Therefore, we want to point out the need to further include the phenomenon of RTM in ecological data analysis.
+Nevertheless, RTM remains to be a critical aspect in ecological modeling. The low awareness and coverage of RTM in environmental analyses became obvious to us during this course. A quick comparison between search results of RTM effects in ecology revealed this. Compared with epidemiology (over 100 articles, cited > 1000 times), ecology was greatly underrepresented in research addressing RTM (only 3 articles, cited < 200 times). Therefore, we want to point out the need to further include the phenomenon of RTM in ecological data analysis. Fortunately, in the current issue of 'Nature' magazine, de Haas shares his story of the retraction of an article caused by an overlooked RTM effect [@Haas2021], which could raise awareness of the topic in the natural sciences community. 
 
 # References
